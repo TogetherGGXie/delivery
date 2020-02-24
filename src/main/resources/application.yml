@@ -1,0 +1,21 @@
+server:
+  port: 9999
+spring:
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost/delivery?useSSL=false
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+#  servlet:
+#    multipart:
+#      # 文件传输大小最大值设置
+#      max-file-size: 2Mb
+#      max-request-size: 100Mb
+
+
