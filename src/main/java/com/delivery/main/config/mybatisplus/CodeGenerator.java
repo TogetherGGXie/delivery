@@ -41,17 +41,19 @@ public class CodeGenerator {
         DataSourceConfig dsc = new DataSourceConfig();
         dsc.setDbType(DbType.MYSQL);
         dsc.setDriverName("com.mysql.jdbc.Driver");
-        dsc.setUsername("kaifa");
-        dsc.setPassword("123456");
-        dsc.setUrl("jdbc:mysql://49.235.215.80:3306/waimai");
+        dsc.setUsername("root");
+        dsc.setPassword("root");
+        dsc.setUrl("jdbc:mysql://localhost/delivery?serverTimezone=UTC");
         mpg.setDataSource(dsc);
 
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
-        strategy.setTablePrefix(new String[] { "" });// 此处可以修改为您的表前缀
-        strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
-        strategy.setInclude(new String[] {"address","admin","category","comments",
-                                            "deliverman","food","order","shop","user"}); // 需要生成的表
+        // 此处可以修改为您的表前缀
+        strategy.setTablePrefix(new String[] { "" });
+        // 表名生成策略
+        strategy.setNaming(NamingStrategy.underline_to_camel);
+        // 需要生成的表
+        strategy.setInclude(new String[] {"address","admin","category","comment","food","order","restaurant","user"});
         strategy.setSuperServiceClass(null);
         strategy.setSuperServiceImplClass(null);
         strategy.setSuperMapperClass(null);
@@ -60,7 +62,7 @@ public class CodeGenerator {
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-        pc.setParent("com.waimai.main.common.persistence");
+        pc.setParent("com.delivery.main.common.persistence");
         pc.setController("controller");
         pc.setService("service");
         pc.setServiceImpl("service.serviceImpl");
