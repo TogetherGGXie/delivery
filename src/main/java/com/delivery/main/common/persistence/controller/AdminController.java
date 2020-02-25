@@ -1,6 +1,8 @@
 package com.delivery.main.common.persistence.controller;
 
 
+import com.delivery.main.common.persistence.service.AdminService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,9 @@ import org.springframework.stereotype.Controller;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+
+    @Autowired
+    AdminService adminService;
 
 }
 
