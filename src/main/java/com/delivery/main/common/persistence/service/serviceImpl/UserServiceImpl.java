@@ -1,9 +1,9 @@
 package com.delivery.main.common.persistence.service.serviceImpl;
 
-import com.delivery.main.common.persistence.template.modal.User;
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.delivery.main.common.persistence.dao.UserMapper;
 import com.delivery.main.common.persistence.service.UserService;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.delivery.main.common.persistence.template.modal.User;
 import org.springframework.stereotype.Service;
 
 /**

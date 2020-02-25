@@ -1,9 +1,9 @@
 package com.delivery.main.common.persistence.service.serviceImpl;
 
-import com.delivery.main.common.persistence.template.modal.Address;
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.delivery.main.common.persistence.dao.AddressMapper;
 import com.delivery.main.common.persistence.service.AddressService;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.delivery.main.common.persistence.template.modal.Address;
 import org.springframework.stereotype.Service;
 
 /**
