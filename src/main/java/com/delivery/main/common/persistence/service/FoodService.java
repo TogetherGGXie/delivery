@@ -3,6 +3,9 @@ package com.delivery.main.common.persistence.service;
 import com.delivery.main.common.persistence.template.modal.Food;
 import com.baomidou.mybatisplus.service.IService;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface FoodService extends IService<Food> {
 
+    public List<HashMap<String, Object>> getFoods(List<Integer> categoryIds);
 }

@@ -14,7 +14,7 @@
         <result column="description" property="description" />
         <result column="month_sale" property="monthSale" />
         <result column="tag" property="tag" />
-        <result column="sequence" property="sequence" />
+        <result column="price" property="price" />
         <result column="promotion_info" property="promotionInfo" />
         <result column="create_time" property="createTime" />
         <result column="last_upd_time" property="lastUpdTime" />

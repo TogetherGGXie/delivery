@@ -66,7 +66,10 @@ public class Food implements Serializable {
      * 标签
      */
     private String tag;
-    private Integer sequence;
+    /**
+     * 价格
+     */
+    private BigDecimal price;
     /**
      * 促销情况
      */
@@ -168,12 +171,12 @@ public class Food implements Serializable {
         this.tag = tag;
     }
 
-    public Integer getSequence() {
-        return sequence;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setSequence(Integer sequence) {
-        this.sequence = sequence;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     public String getPromotionInfo() {
@@ -221,7 +224,7 @@ public class Food implements Serializable {
         ", description=" + description +
         ", monthSale=" + monthSale +
         ", tag=" + tag +
-        ", sequence=" + sequence +
+        ", price=" + price +
         ", promotionInfo=" + promotionInfo +
         ", createTime=" + createTime +
         ", lastUpdTime=" + lastUpdTime +

@@ -41,13 +41,13 @@ import java.util.Map;
 public class UserController {
 
     @Value("${appId}")
-    String appId;
+    private String appId;
 
     @Value("${appSecret}")
-    String appSecret;
+    private String appSecret;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @ApiOperation("微信用户登陆")
     @ResponseBody

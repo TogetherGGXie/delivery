@@ -56,6 +56,10 @@ public class Admin implements Serializable {
      * 管理员所在城市
      */
     private String city;
+    /**
+     * 普通管理员所属店铺
+     */
+    private Integer restaurantId;
 
 
     public Integer getAdminId() {
@@ -122,17 +126,26 @@ public class Admin implements Serializable {
         this.city = city;
     }
 
+    public Integer getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(Integer restaurantId) {
+        this.restaurantId = restaurantId;
+    }
+
     @Override
     public String toString() {
         return "Admin{" +
-        ", adminId=" + adminId +
-        ", adminName=" + adminName +
-        ", password=" + password +
-        ", createTime=" + createTime +
-        ", adminType=" + adminType +
-        ", status=" + status +
-        ", avatar=" + avatar +
-        ", city=" + city +
-        "}";
+                "adminId=" + adminId +
+                ", adminName='" + adminName + '\'' +
+                ", password='" + password + '\'' +
+                ", createTime=" + createTime +
+                ", adminType=" + adminType +
+                ", status=" + status +
+                ", avatar='" + avatar + '\'' +
+                ", city='" + city + '\'' +
+                ", restaurantId=" + restaurantId +
+                '}';
     }
 }
