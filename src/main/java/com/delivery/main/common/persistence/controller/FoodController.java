@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ import java.util.List;
  * @author null123
  * @since 2020-02-24
  */
-@Controller
+@RestController
 @RequestMapping("/food")
 @Api("商品管理")
 public class FoodController {
@@ -52,29 +53,7 @@ public class FoodController {
             res.setMessage("登录状态失效");
             return res;
         } else {
-            List<HashMap<String, Object>> categories = new ArrayList<>();
-            List<HashMap<String, Object>> foods = new ArrayList<>();
-            categories = categoryService.getCategories(Integer.valueOf(restaurantId));
-            List<Integer> categoryIds = new ArrayList<>();
-            List<HashMap<String, Object>> object = new ArrayList<>();
-            for (HashMap<String, Object> ca : categories) {
-                if(!categoryIds.contains(ca.get("categoryId"))){
-                    categoryIds.add((Integer)ca.get("categoryId"));
-                    HashMap<String, Object> cate = new HashMap<>();
-                    cate.put("category", ca);
-                    object.add(cate);
-                }
-            }
-            foods = foodService.getFoods(categoryIds);
-            for (HashMap<String, Object> o: object) {
-                List<HashMap<String, Object>> foodList = new ArrayList<>();
-                for (HashMap<String, Object> f: foods) {
-                    if (f.get("categoryId").equals(o.get("categoryId"))) {
-                        foodList.add(f);
-                    }
-                }
-                o.put("foodList", foodList);
-            }
+            List<HashMap<String, Object>> object = foodService.getFoods(restaurantId);
             res.setStatus(200);
             res.setMessage("获取菜品成功");
             res.setData(object);

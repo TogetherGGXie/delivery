@@ -30,15 +30,15 @@ public interface FoodMapper extends BaseMapper<Food> {
             "\tmonth_sale,\n" +
             "\ttag,\n" +
             "\tpromotion_info,\n" +
-            "\tsequence\n" +
+            "\tprice\n" +
             "FROM\n" +
             "\t`food`\n" +
-            "\twhere status = 1 and categoryId in \n" +
+            "\twhere status = 1 and category_id in \n" +
             "<foreach collection='categoryIds' item='categoryId' index='index'  open = '(' close = ')' separator=','> \n" +
             "#{categoryId} \n" +
             "</foreach>\n" +
             "\tORDER BY\n" +
-            "\tcategoryId </script> ")
+            "\tcategory_id </script> ")
     @Results(id="FoodsResultMap",value={
             @Result(property = "foodId", column = "food_id"),
             @Result(property = "categoryId", column = "category_id"),

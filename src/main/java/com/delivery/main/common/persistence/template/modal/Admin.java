@@ -59,6 +59,7 @@ public class Admin implements Serializable {
     /**
      * 普通管理员所属店铺
      */
+    @TableField("restaurant_id")
     private Integer restaurantId;
 
 

@@ -16,5 +16,5 @@ import java.util.List;
  */
 public interface FoodService extends IService<Food> {
 
-    public List<HashMap<String, Object>> getFoods(List<Integer> categoryIds);
+    public List<HashMap<String, Object>> getFoods(Integer restaurantId);
 }

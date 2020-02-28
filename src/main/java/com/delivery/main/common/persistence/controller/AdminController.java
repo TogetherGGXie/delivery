@@ -1,17 +1,16 @@
 package com.delivery.main.common.persistence.controller;
 
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.delivery.main.common.persistence.service.*;
 import com.delivery.main.common.persistence.template.modal.Admin;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ import com.delivery.main.util.Result;
  * @author null123
  * @since 2020-02-24
  */
-@Controller
+@RestController
 @RequestMapping("/admin")
 @Api("管理员管理")
 public class AdminController {
@@ -142,44 +141,29 @@ public class AdminController {
     }
 
     @ApiOperation("店铺管理员获取所有菜单及商品")
-    @RequestMapping("/getAllFoods")
-    public Result getAllFoods(HttpServletRequest request) {
+    @RequestMapping(value = "/getAllFoods/{restaurantId}", method = RequestMethod.GET)
+    public Result getAllFoods(@PathVariable Integer restaurantId,
+                              HttpServletRequest request) {
         Result res = new Result();
         Admin admin = (Admin)request.getSession().getAttribute("admin");
         if (admin == null) {
             res.setStatus(-1);
             res.setMessage("登录状态失效");
             return res;
+        } else if (admin.getAdminType() == 1 && !admin.getRestaurantId().equals(restaurantId)) {
+            res.setStatus(-1);
+            res.setMessage("权限不足，获取菜单失败");
+            return res;
         } else {
-            List<HashMap<String, Object>> categories = new ArrayList<>();
-            List<HashMap<String, Object>> foods = new ArrayList<>();
-            categories = categoryService.getCategories(admin.getRestaurantId());
-            List<Integer> categoryIds = new ArrayList<>();
-            List<HashMap<String, Object>> object = new ArrayList<>();
-            for (HashMap<String, Object> ca : categories) {
-                if(!categoryIds.contains(ca.get("categoryId"))){
-                    categoryIds.add((Integer)ca.get("categoryId"));
-                    HashMap<String, Object> cate = new HashMap<>();
-                    cate.put("category", ca);
-                    object.add(cate);
-                }
-            }
-            foods = foodService.getFoods(categoryIds);
-            for (HashMap<String, Object> o: object) {
-                List<HashMap<String, Object>> foodList = new ArrayList<>();
-                for (HashMap<String, Object> f: foods) {
-                    if (f.get("categoryId").equals(o.get("categoryId"))) {
-                        foodList.add(f);
-                    }
-                }
-                o.put("foodList", foodList);
-            }
+            List<HashMap<String, Object>> object = foodService.getFoods(restaurantId);
             res.setStatus(200);
             res.setMessage("获取菜品成功");
             res.setData(object);
             return res;
         }
     }
+
+
 
 }
 

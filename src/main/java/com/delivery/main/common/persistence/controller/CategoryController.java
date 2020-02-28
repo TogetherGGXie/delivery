@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author null123
  * @since 2020-02-24
  */
-@Controller
+@RestController
 @RequestMapping("/category")
 @Api("菜单管理")
 public class CategoryController {

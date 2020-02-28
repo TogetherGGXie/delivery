@@ -29,7 +29,7 @@ public interface CategoryMapper extends BaseMapper<Category> {
             "\trestaurant_id = #{restaurantId}\n" +
             "\tand status = 1\n" +
             "ORDER BY\n" +
-            "\tcategoryId")
+            "\tcategory_id")
     @Results(id="categoryLists",value={
             @Result(property = "categoryId", column = "category_id"),
             @Result(property = "name", column = "name"),
