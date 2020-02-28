@@ -16,7 +16,7 @@ import java.util.List;
  * @author null123
  * @since 2020-02-24
  */
-@Repository
+@Mapper
 public interface FoodMapper extends BaseMapper<Food> {
 
     @Select("<script>SELECT \n" +
