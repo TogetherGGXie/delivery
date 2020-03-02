@@ -50,20 +50,20 @@ public class Restaurant implements Serializable {
     @TableField("month_sales_tip")
     private String monthSalesTip;
     /**
-     * 店铺评分
+     * 订单评分
      */
-    @TableField("restaurant_score")
-    private BigDecimal restaurantScore;
+    @TableField("order_score")
+    private BigDecimal orderScore;
     /**
      * 配送评分
      */
     @TableField("delivery_score")
     private BigDecimal deliveryScore;
     /**
-     * 质量评分
+     * 包装评分
      */
-    @TableField("quality_score")
-    private BigDecimal qualityScore;
+    @TableField("package_score")
+    private BigDecimal packageScore;
     /**
      * 距离
      */
@@ -203,12 +203,12 @@ public class Restaurant implements Serializable {
         this.monthSalesTip = monthSalesTip;
     }
 
-    public BigDecimal getRestaurantScore() {
-        return restaurantScore;
+    public BigDecimal getOrderScore() {
+        return orderScore;
     }
 
-    public void setRestaurantScore(BigDecimal restaurantScore) {
-        this.restaurantScore = restaurantScore;
+    public void setOrderScore(BigDecimal orderScore) {
+        this.orderScore = orderScore;
     }
 
     public BigDecimal getDeliveryScore() {
@@ -219,12 +219,12 @@ public class Restaurant implements Serializable {
         this.deliveryScore = deliveryScore;
     }
 
-    public BigDecimal getQualityScore() {
-        return qualityScore;
+    public BigDecimal getPackageScore() {
+        return packageScore;
     }
 
-    public void setQualityScore(BigDecimal qualityScore) {
-        this.qualityScore = qualityScore;
+    public void setPackageScore(BigDecimal packageScore) {
+        this.packageScore = packageScore;
     }
 
     public BigDecimal getDistance() {
@@ -396,9 +396,9 @@ public class Restaurant implements Serializable {
         ", picture=" + picture +
         ", monthSales=" + monthSales +
         ", monthSalesTip=" + monthSalesTip +
-        ", restaurantScore=" + restaurantScore +
+        ", orderScore=" + orderScore +
         ", deliveryScore=" + deliveryScore +
-        ", qualityScore=" + qualityScore +
+        ", packageScore=" + packageScore +
         ", distance=" + distance +
         ", deliveryTime=" + deliveryTime +
         ", deliveryFee=" + deliveryFee +

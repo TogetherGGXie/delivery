@@ -11,7 +11,7 @@
  Target Server Version : 50720
  File Encoding         : 65001
 
- Date: 27/02/2020 23:44:59
+ Date: 02/03/2020 14:56:25
 */
 
 SET NAMES utf8mb4;
@@ -48,12 +48,12 @@ CREATE TABLE `admin`  (
   `password` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '管理员密码',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `admin_type` int(1) NOT NULL DEFAULT 1 COMMENT '管理员类型 1:普通管理、 2:超级管理员',
-  `status` int(1) NULL DEFAULT 1 COMMENT '账号状态 0禁用 1启用',
+  `status` int(1) NOT NULL DEFAULT 1 COMMENT '账号状态 0禁用 1启用',
   `avatar` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '管理员头像',
   `city` varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '管理员所在城市',
   `restaurant_id` int(255) NULL DEFAULT NULL COMMENT '普通管理所属店铺',
   PRIMARY KEY (`admin_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for category
@@ -67,7 +67,7 @@ CREATE TABLE `category`  (
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `status` int(1) NULL DEFAULT NULL COMMENT '状态 -1删除 0禁用 1启用',
   PRIMARY KEY (`category_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for comment
@@ -85,8 +85,9 @@ CREATE TABLE `comment`  (
   `order_score` int(5) NULL DEFAULT NULL COMMENT '订单评分',
   `delivery_score` int(255) NULL DEFAULT NULL COMMENT '配送评分',
   `picture` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图片',
+  `package_score` int(255) NULL DEFAULT NULL COMMENT '包装评分',
   PRIMARY KEY (`comment_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for food
@@ -109,7 +110,7 @@ CREATE TABLE `food`  (
   `last_upd_time` datetime(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '最近编辑时间',
   `status` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '状态 -1删除 0禁用 1 启用',
   PRIMARY KEY (`food_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for order
@@ -142,9 +143,9 @@ CREATE TABLE `restaurant`  (
   `picture` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '店家图片地址',
   `month_sales` int(255) NOT NULL DEFAULT 0 COMMENT '月售量',
   `month_sales_tip` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '月售量',
-  `restaurant_score` decimal(3, 1) NULL DEFAULT NULL COMMENT '店铺评分',
+  `order_score` decimal(3, 1) NULL DEFAULT NULL COMMENT '订单评分',
   `delivery_score` decimal(3, 1) NULL DEFAULT NULL COMMENT '配送评分',
-  `quality_score` decimal(3, 1) NULL DEFAULT NULL COMMENT '质量评分',
+  `package_score` decimal(3, 1) NULL DEFAULT NULL COMMENT '包装评分',
   `distance` decimal(10, 2) NULL DEFAULT NULL COMMENT '距离',
   `delivery_time` int(10) NULL DEFAULT NULL COMMENT '配送时间',
   `delivery_fee` decimal(3, 1) NULL DEFAULT NULL COMMENT '配送费',
@@ -184,6 +185,6 @@ CREATE TABLE `user`  (
   `create__time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `status` int(1) NULL DEFAULT 1 COMMENT '账号状态0：禁用、 1：启用',
   PRIMARY KEY (`user_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

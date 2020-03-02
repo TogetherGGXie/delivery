@@ -10,9 +10,9 @@
         <result column="picture" property="picture" />
         <result column="month_sales" property="monthSales" />
         <result column="month_sales_tip" property="monthSalesTip" />
-        <result column="restaurant_score" property="restaurantScore" />
+        <result column="order_score" property="orderScore" />
         <result column="delivery_score" property="deliveryScore" />
-        <result column="quality_score" property="qualityScore" />
+        <result column="package_score" property="packageScore" />
         <result column="distance" property="distance" />
         <result column="delivery_time" property="deliveryTime" />
         <result column="delivery_fee" property="deliveryFee" />

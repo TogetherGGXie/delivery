@@ -69,6 +69,11 @@ public class Comment implements Serializable {
     @TableField("delivery_score")
     private Integer deliveryScore;
     /**
+     * 包装评分
+     */
+    @TableField("package_score")
+    private Integer packageScore;
+    /**
      * 图片
      */
     private String picture;
@@ -162,20 +167,29 @@ public class Comment implements Serializable {
         this.picture = picture;
     }
 
+    public Integer getPackageScore() {
+        return packageScore;
+    }
+
+    public void setPackageScore(Integer packageScore) {
+        this.packageScore = packageScore;
+    }
+
     @Override
     public String toString() {
         return "Comment{" +
-        ", commentId=" + commentId +
-        ", userId=" + userId +
-        ", userName=" + userName +
-        ", avatar=" + avatar +
-        ", restaurantId=" + restaurantId +
-        ", commentTime=" + commentTime +
-        ", comment=" + comment +
-        ", orderId=" + orderId +
-        ", orderScore=" + orderScore +
-        ", deliveryScore=" + deliveryScore +
-        ", picture=" + picture +
-        "}";
+                "commentId=" + commentId +
+                ", userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", restaurantId=" + restaurantId +
+                ", commentTime=" + commentTime +
+                ", comment='" + comment + '\'' +
+                ", orderId=" + orderId +
+                ", orderScore=" + orderScore +
+                ", deliveryScore=" + deliveryScore +
+                ", packageScore=" + packageScore +
+                ", picture='" + picture + '\'' +
+                '}';
     }
 }
