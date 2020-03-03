@@ -11,7 +11,7 @@
  Target Server Version : 50720
  File Encoding         : 65001
 
- Date: 02/03/2020 14:56:25
+ Date: 04/03/2020 00:55:17
 */
 
 SET NAMES utf8mb4;
@@ -86,6 +86,9 @@ CREATE TABLE `comment`  (
   `delivery_score` int(255) NULL DEFAULT NULL COMMENT '配送评分',
   `picture` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图片',
   `package_score` int(255) NULL DEFAULT NULL COMMENT '包装评分',
+  `reply` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商家回复',
+  `has_reply` int(1) NULL DEFAULT NULL COMMENT '是否已回复',
+  `reply_time` datetime(0) NULL DEFAULT NULL COMMENT '商家回复时间',
   PRIMARY KEY (`comment_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
@@ -108,7 +111,7 @@ CREATE TABLE `food`  (
   `promotion_info` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '促销情况',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `last_upd_time` datetime(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '最近编辑时间',
-  `status` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '状态 -1删除 0禁用 1 启用',
+  `status` int(1) NULL DEFAULT NULL COMMENT '状态 -1删除 0禁用 1 启用',
   PRIMARY KEY (`food_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 

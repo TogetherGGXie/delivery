@@ -1,6 +1,8 @@
 package com.delivery.main.common.persistence.controller;
 
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.delivery.main.common.persistence.service.CommentService;
 import com.delivery.main.common.persistence.service.RestaurantService;
 import com.delivery.main.common.persistence.template.modal.Comment;
@@ -47,6 +49,8 @@ public class CommentController {
     @ApiOperation("获取店铺评论")
     @RequestMapping("/getComments/{restaurantId}")
     public Result getComments(@PathVariable Integer restaurantId,
+                              @RequestParam(value = "pageNumber", required = false) Integer page,
+                              @RequestParam(value = "pageSize", required = false) Integer pageSize,
                               HttpServletRequest request) {
         Result res = new Result();
         User user = (User)request.getSession().getAttribute("user");
@@ -55,10 +59,16 @@ public class CommentController {
             res.setMessage("登录状态失效");
             return res;
         } else {
-            List<HashMap<String, Object>> comments = commentService.getComments(restaurantId);
+            if(page == null) {
+                page = 1;
+            }
+            if (pageSize == null) {
+                pageSize = 5;
+            }
+            Page<HashMap<String, Object>> pager = commentService.getComments(new Page<>(page,pageSize), restaurantId);
             res.setStatus(200);
             res.setMessage("获取评论成功");
-            res.setData(comments);
+            res.setData(pager);
             return res;
         }
     }
@@ -80,32 +90,44 @@ public class CommentController {
             res.setMessage("登录状态失效");
             return res;
         } else {
-            Restaurant restaurant = restaurantService.selectById(restaurantId);
-            Integer commentNum = restaurant.getCommentNumber();
-            restaurant.setOrderScore(restaurant.getOrderScore().multiply(new BigDecimal(commentNum)).add(new BigDecimal(orderScore)).divide(new BigDecimal(commentNum + 1)));
-            restaurant.setDeliveryScore(restaurant.getDeliveryScore().multiply(new BigDecimal(commentNum)).add(new BigDecimal(deliveryScore)).divide(new BigDecimal(commentNum + 1)));
-            restaurant.setPackageScore(restaurant.getPackageScore().multiply(new BigDecimal(commentNum)).add(new BigDecimal(packageScore)).divide(new BigDecimal(commentNum + 1)));
-            restaurant.setCommentNumber(commentNum + 1);
-            Comment co = new Comment();
-            co.setUserId(user.getUserId());
-            co.setAvatar(user.getAvatar());
-            co.setUserName(user.getUsername());
-            co.setRestaurantId(restaurantId);
-            co.setComment(comment);
-            co.setCommentTime(new Date());
-            co.setOrderId(orderId);
-            co.setDeliveryScore(deliveryScore);
-            co.setPackageScore(packageScore);
-            co.setOrderScore(orderScore);
-            co.setPicture(picture);
-            if (restaurantService.updateById(restaurant) && commentService.insert(co)) {
-                res.setStatus(200);
-                res.setMessage("评论成功");
+            Comment c = commentService.selectOne(new EntityWrapper<Comment>().eq("order_id", orderId));
+            if (c != null) {
+                res.setStatus(-1);
+                res.setMessage("您已评论过该订单");
+                return res;
+            } else if (!c.getUserId().equals(user.getUserId())) {
+                res.setStatus(-1);
+                res.setMessage("您无法评价该订单");
                 return res;
             } else {
-                res.setStatus(-1);
-                res.setMessage("评论失败");
-                return res;
+                Restaurant restaurant = restaurantService.selectById(restaurantId);
+                Integer commentNum = restaurant.getCommentNumber();
+                restaurant.setOrderScore(restaurant.getOrderScore().multiply(new BigDecimal(commentNum)).add(new BigDecimal(orderScore)).divide(new BigDecimal(commentNum + 1)));
+                restaurant.setDeliveryScore(restaurant.getDeliveryScore().multiply(new BigDecimal(commentNum)).add(new BigDecimal(deliveryScore)).divide(new BigDecimal(commentNum + 1)));
+                restaurant.setPackageScore(restaurant.getPackageScore().multiply(new BigDecimal(commentNum)).add(new BigDecimal(packageScore)).divide(new BigDecimal(commentNum + 1)));
+                restaurant.setCommentNumber(commentNum + 1);
+                Comment co = new Comment();
+                co.setUserId(user.getUserId());
+                co.setAvatar(user.getAvatar());
+                co.setUserName(user.getUsername());
+                co.setRestaurantId(restaurantId);
+                co.setComment(comment);
+                co.setCommentTime(new Date());
+                co.setOrderId(orderId);
+                co.setDeliveryScore(deliveryScore);
+                co.setPackageScore(packageScore);
+                co.setOrderScore(orderScore);
+                co.setHasReply(0);
+                co.setPicture(picture);
+                if (restaurantService.updateById(restaurant) && commentService.insert(co)) {
+                    res.setStatus(200);
+                    res.setMessage("评论成功");
+                    return res;
+                } else {
+                    res.setStatus(-1);
+                    res.setMessage("评论失败");
+                    return res;
+                }
             }
         }
     }

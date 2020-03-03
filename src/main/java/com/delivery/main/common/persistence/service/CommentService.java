@@ -1,5 +1,6 @@
 package com.delivery.main.common.persistence.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.delivery.main.common.persistence.template.modal.Comment;
 import com.baomidou.mybatisplus.service.IService;
 
@@ -16,5 +17,5 @@ import java.util.List;
  */
 public interface CommentService extends IService<Comment> {
 
-    List<HashMap<String, Object>> getComments(Integer restaurantId);
+    Page<HashMap<String, Object>> getComments(Page<HashMap<String, Object>> page, Integer restaurantId);
 }

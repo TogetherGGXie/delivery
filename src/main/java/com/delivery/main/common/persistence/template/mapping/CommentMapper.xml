@@ -16,6 +16,9 @@
         <result column="delivery_score" property="deliveryScore" />
         <result column="package_score" property="packageScore" />
         <result column="picture" property="picture" />
+        <result column="reply" property="reply" />
+        <result column="reply_time" property="replyTime" />
+        <result column="has_reply" property="hasReply" />
     </resultMap>
 
 </mapper>

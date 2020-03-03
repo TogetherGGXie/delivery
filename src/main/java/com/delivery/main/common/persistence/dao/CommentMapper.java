@@ -1,5 +1,6 @@
 package com.delivery.main.common.persistence.dao;
 
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.delivery.main.common.persistence.template.modal.Comment;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
@@ -26,7 +27,10 @@ public interface CommentMapper extends BaseMapper<Comment> {
             "\torder_score,\n" +
             "\tpackage_score,\n" +
             "\tdelivery_score,\n" +
-            "\tpicture \n" +
+            "\tpicture, \n" +
+            "\thas_reply,\n" +
+            "\treply,\n" +
+            "\treply_time\n" +
             "FROM\n" +
             "\t`comment`\n" +
             "WHERE\n" +
@@ -42,6 +46,9 @@ public interface CommentMapper extends BaseMapper<Comment> {
             @Result(property = "packageScore", column = "package_score"),
             @Result(property = "deliveryScore", column = "delivery_score"),
             @Result(property = "picture", column = "picture"),
+            @Result(property = "hasReply", column = "has_reply"),
+            @Result(property = "reply", column = "reply"),
+            @Result(property = "replyTime", column = "reply_time"),
     })
-    List<HashMap<String, Object>> getComments(@Param("restaurantId") Integer restaurantId);
+    List<HashMap<String, Object>> getComments(Pagination pagination, @Param("restaurantId") Integer restaurantId);
 }

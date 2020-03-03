@@ -1,5 +1,6 @@
 package com.delivery.main.common.persistence.service.serviceImpl;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.delivery.main.common.persistence.dao.CommentMapper;
 import com.delivery.main.common.persistence.service.CommentService;
@@ -25,7 +26,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     private  CommentMapper commentMapper;
 
     @Override
-    public List<HashMap<String, Object>> getComments(Integer restaurantId) {
-        return commentMapper.getComments(restaurantId);
+    public Page<HashMap<String, Object>> getComments(Page<HashMap<String, Object>> pager, Integer restaurantId) {
+        Page<HashMap<String, Object>> page = new Page<>(pager.getCurrent(),pager.getSize());
+        return page.setRecords(commentMapper.getComments(page, restaurantId));
     }
 }

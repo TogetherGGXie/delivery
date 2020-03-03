@@ -77,6 +77,21 @@ public class Comment implements Serializable {
      * 图片
      */
     private String picture;
+    /**
+     * 商家回复
+     */
+    @TableField("reply")
+    private String reply;
+    /**
+     * 商家回复时间
+     */
+    @TableField("reply_time")
+    private Date replyTime;
+    /**
+     * 是否已回复
+     */
+    @TableField("has_reply")
+    private Integer hasReply;
 
 
     public Integer getCommentId() {
@@ -167,6 +182,30 @@ public class Comment implements Serializable {
         this.picture = picture;
     }
 
+    public Integer getHasReply() {
+        return hasReply;
+    }
+
+    public void setHasReply(Integer hasReply) {
+        this.hasReply = hasReply;
+    }
+
+    public String getReply() {
+        return reply;
+    }
+
+    public void setReply(String reply) {
+        this.reply = reply;
+    }
+
+    public Date getReplyTime() {
+        return replyTime;
+    }
+
+    public void setReplyTime(Date replyTime) {
+        this.replyTime = replyTime;
+    }
+
     public Integer getPackageScore() {
         return packageScore;
     }
@@ -190,6 +229,9 @@ public class Comment implements Serializable {
                 ", deliveryScore=" + deliveryScore +
                 ", packageScore=" + packageScore +
                 ", picture='" + picture + '\'' +
+                ", reply='" + reply + '\'' +
+                ", replyTime=" + replyTime +
+                ", hasReply=" + hasReply +
                 '}';
     }
 }
