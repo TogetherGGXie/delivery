@@ -1,5 +1,6 @@
 package com.delivery.main.common.persistence.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.delivery.main.common.persistence.template.modal.Category;
 import com.baomidou.mybatisplus.service.IService;
 
@@ -17,5 +18,5 @@ import java.util.List;
 public interface CategoryService extends IService<Category> {
 
     List<HashMap<String, Object>> getCategories(Integer restaurantId);
-
+    Page<HashMap<String, Object>> getCategoryList(Page<HashMap<String, Object>> page, Integer restaurantId);
 }

@@ -1,5 +1,6 @@
 package com.delivery.main.common.persistence.service.serviceImpl;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.delivery.main.common.persistence.dao.CategoryMapper;
 import com.delivery.main.common.persistence.dao.FoodMapper;
@@ -56,5 +57,11 @@ public class FoodServiceImpl extends ServiceImpl<FoodMapper, Food> implements Fo
             o.put("foodList", foodList);
         }
         return object;
+    }
+
+    @Override
+    public Page<HashMap<String, Object>> getFoodList(Page<HashMap<String, Object>> pager, Integer restaurantId) {
+        Page<HashMap<String, Object>> page = new Page<>(pager.getCurrent(),pager.getSize());
+        return page.setRecords(foodMapper.getFoodList(page, restaurantId));
     }
 }

@@ -1,5 +1,6 @@
 package com.delivery.main.common.persistence.dao;
 
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.delivery.main.common.persistence.template.modal.Category;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
@@ -36,4 +37,25 @@ public interface CategoryMapper extends BaseMapper<Category> {
             @Result(property = "icon", column = "icon"),
     })
     List<HashMap<String, Object>> getCagegories(@Param("restaurantId") Integer restaurantId);
+
+    @Select("SELECT\n" +
+            "\tcategory_id,\n" +
+            "\tname,\n" +
+            "\ticon,\n" +
+            "\tcreate_time,\n" +
+            "\tstatus\n" +
+            "FROM\n" +
+            "\t`category`\n" +
+            "WHERE\n" +
+            "\trestaurant_id = #{restaurantId}\n" +
+            "ORDER BY\n" +
+            "\tcreate_time")
+    @Results(id="categoryList",value={
+            @Result(property = "categoryId", column = "category_id"),
+            @Result(property = "name", column = "name"),
+            @Result(property = "icon", column = "icon"),
+            @Result(property = "create_time", column = "create_time"),
+            @Result(property = "status", column = "status"),
+    })
+    List<HashMap<String, Object>> getCategoryList(Pagination pagination, @Param("restaurantId") Integer restaurantId);
 }
