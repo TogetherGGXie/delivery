@@ -5,10 +5,9 @@ import com.delivery.main.common.persistence.dao.CategoryMapper;
 import com.delivery.main.common.persistence.dao.FoodMapper;
 import com.delivery.main.common.persistence.service.FoodService;
 import com.delivery.main.common.persistence.template.modal.Food;
-import io.swagger.models.auth.In;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,10 +23,10 @@ import java.util.List;
 @Service
 public class FoodServiceImpl extends ServiceImpl<FoodMapper, Food> implements FoodService {
 
-    @Autowired
+    @Resource
     private FoodMapper foodMapper;
 
-    @Autowired
+    @Resource
     private CategoryMapper categoryMapper;
 
     @Override

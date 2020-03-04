@@ -4,8 +4,8 @@ spring:
   profiles:
     active: dev
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost/delivery?useSSL=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost/delivery?serverTimezone=UTC&characterEncoding=utf-8&serverTimezone=GMT%2B8
     username: root
     password: root
   jpa:

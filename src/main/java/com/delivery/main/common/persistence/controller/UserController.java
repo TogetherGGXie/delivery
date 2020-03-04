@@ -6,16 +6,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.delivery.main.common.persistence.service.UserService;
 import com.delivery.main.common.persistence.template.modal.User;
+import com.delivery.main.util.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
@@ -152,6 +149,27 @@ public class UserController {
         }
         map.put("status", 200);
         return map;
+    }
+
+    @ApiOperation("设置用户信息")
+    @RequestMapping(value = "admin/user_info" ,method = RequestMethod.POST)
+    @ResponseBody
+    public Result setUserInfo(@RequestBody HashMap<String, String> userInfoForm, HttpServletRequest request){
+        User user = (User)request.getSession().getAttribute("user");
+        if(user == null){
+            return new Result(-1,"用户登录已失效");
+        }else{
+            String gender =  userInfoForm.get("gender");
+
+            User userInfo = new User();
+            userInfo.setGender(Integer.valueOf(gender));
+            boolean insert = userService.insert(userInfo);
+            if(insert){
+                return new Result(200,"设置用户信息成功");
+            }else{
+                return new Result(-1,"设置用户信息失败");
+            }
+        }
     }
 }
 

@@ -1,7 +1,9 @@
 package com.delivery.main.common.persistence.service;
 
-import com.delivery.main.common.persistence.template.modal.Order;
 import com.baomidou.mybatisplus.service.IService;
+import com.delivery.main.common.persistence.template.modal.Order;
+
+import java.util.HashMap;
 
 /**
  * <p>
@@ -12,5 +14,5 @@ import com.baomidou.mybatisplus.service.IService;
  * @since 2020-02-24
  */
 public interface OrderService extends IService<Order> {
-
+    HashMap<String,Object> queryOrder(Order order);
 }
