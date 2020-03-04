@@ -1,7 +1,10 @@
 package com.delivery.main.common.persistence.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.delivery.main.common.persistence.template.modal.User;
 import com.baomidou.mybatisplus.service.IService;
+
+import java.util.HashMap;
 
 /**
  * <p>
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface UserService extends IService<User> {
 
+    Page<HashMap<String, Object>> getUserList(Page<HashMap<String, Object>> page);
 }
