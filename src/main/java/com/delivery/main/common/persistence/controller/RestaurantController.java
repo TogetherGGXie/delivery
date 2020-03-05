@@ -62,7 +62,7 @@ public class RestaurantController {
             String lat = restaurantInfo.get("lat");
             String offset = restaurantInfo.get("offset");
             String pageSize = restaurantInfo.get("limit");
-            List<Restaurant> restaurants = restaurantService.selectList(new EntityWrapper<Restaurant>().eq("lng", lng).eq("lat", lat));
+            List<Restaurant> restaurants = restaurantService.selectList(new EntityWrapper<Restaurant>().between("lng", Integer.valueOf(lng)-10,Integer.valueOf(lng)+10).eq("lat", lat));
             return new Result(200, "获得店铺信息成功", restaurants);
         }
     }

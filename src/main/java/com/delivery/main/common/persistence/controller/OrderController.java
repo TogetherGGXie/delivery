@@ -8,6 +8,9 @@ import com.delivery.main.common.persistence.template.modal.User;
 import com.delivery.main.util.Result;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONArray;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,16 +52,48 @@ public class OrderController {
     @ApiOperation("提交订单")
     @RequestMapping(value = "v1/wxorder", method= RequestMethod.POST)
     @ResponseBody
-    public Result submitOrders(@RequestParam HashMap<String,Object> requestDate, HttpServletRequest request) {
+    public Result submitOrders(@RequestParam Order orderDetail, HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("user");
         if(user == null){
             return new Result(-1,"用户登录失败");
-        }else{
+        }else {
+            boolean orderResult = orderService.insert(orderDetail);
+
+            if (orderResult) {
+                String foodDetails = orderDetail.getFoodDetails();
+                HashMap<String, String> hashMap = new HashMap<String, String>();
+                JSONArray jsonArray = null;
+                try {
+                    jsonArray = new JSONArray(foodDetails);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = null;
+                    try {
+                        jsonObject = jsonArray.getJSONObject(i);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        String totalPrice = jsonObject.getString("total_price");
+
+                        hashMap.put("total_price", totalPrice);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                return new Result(200,"提交订单成功",hashMap);
+
+            }else {
+                return new Result(-1,"提交订单失败");
+            }
 //            List<Order> orders = orderService.selectList(new EntityWrapper<Order>().eq("user_id", order.getUserId()));
 //            Result  result = new Result();
 //            result.setData(orders);
 //            return new Result(200, "添加成功",orders);
-            return new Result(200);
+
         }
     }
 

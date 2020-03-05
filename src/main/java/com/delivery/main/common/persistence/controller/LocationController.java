@@ -47,5 +47,29 @@ public class LocationController {
             return new Result(200,"获取位置信息成功",location);
         }
     }
+
+    @ApiOperation("根据lat，lng获取详情位置")
+    @ResponseBody
+    @RequestMapping(value = "detailLocation" ,method = RequestMethod.GET)
+    public Result findAddressByLat(@RequestParam(value = "lat" ,required = false) String lat,
+                                   @RequestParam(value = "lng" ,required = false) String lng,
+                                   HttpServletRequest request){
+        User user = (User)request.getSession().getAttribute("user");
+        if(user == null){
+            return new Result(-1,"登录状态失效");
+        }else{
+            Location location = locationService.selectOne(new EntityWrapper<Location>().eq("lat", lat).eq("lng", lng));
+//            List<HashMap<String,String>> newLocation = new ArrayList<HashMap<String,String>>();
+//            HashMap<String,String> hashMap = new HashMap<>();
+//            for(Location loc : location){
+//                String title = loc.getTitle();
+//                String address = loc.getAddress();
+//                hashMap.put("title",title);
+//                hashMap.put("address",address);
+//                newLocation.add(hashMap);
+//            }
+            return new Result(200,"获取位置信息成功",location);
+        }
+    }
 }
 
