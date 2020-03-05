@@ -51,7 +51,7 @@ public class UserController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public Map decodeUserInfo(@RequestParam(value = "code") String code,
                               HttpServletRequest request){
-//        System.out.println(code);
+        System.out.println(code);
         Map map = new HashMap();
         //登录凭证不能为空
         if (code == null || code.length() == 0) {

@@ -4,7 +4,6 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.delivery.main.common.persistence.template.modal.Location">
-        <id column="location_id" property="locationId" />
         <result column="lng" property="lng" />
         <result column="lat" property="lat" />
         <result column="title" property="title" />

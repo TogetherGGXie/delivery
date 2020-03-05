@@ -7,6 +7,7 @@ import com.delivery.main.common.persistence.template.modal.Restaurant;
 import com.delivery.main.common.persistence.template.modal.User;
 import com.delivery.main.util.Result;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ import java.util.List;
  */
 @RestController
 public class RestaurantController {
+    @Autowired
     private RestaurantService restaurantService;
 
     @ApiOperation("添加餐馆")
@@ -55,16 +57,17 @@ public class RestaurantController {
     @ResponseBody
     public Result getRestaurants(@RequestParam HashMap<String,String> restaurantInfo,HttpServletRequest request){
         User user = (User) request.getSession().getAttribute("user");
-        if(user == null ){
-            return new Result(-1,"登录已过期");
-        }else {
+//        if(user == null ){
+//            return new Result(-1,"登录已过期");
+//        }else {
+        System.out.println(restaurantInfo);
             String lng = restaurantInfo.get("lng");
             String lat = restaurantInfo.get("lat");
             String offset = restaurantInfo.get("offset");
             String pageSize = restaurantInfo.get("limit");
-            List<Restaurant> restaurants = restaurantService.selectList(new EntityWrapper<Restaurant>().between("lng", Integer.valueOf(lng)-10,Integer.valueOf(lng)+10).eq("lat", lat));
+            List<Restaurant> restaurants = restaurantService.selectList(new EntityWrapper<Restaurant>().eq("lng", lng).eq("lat", lat));
             return new Result(200, "获得店铺信息成功", restaurants);
-        }
+//        }
     }
 
     @ApiOperation("根据关键字搜索餐馆")

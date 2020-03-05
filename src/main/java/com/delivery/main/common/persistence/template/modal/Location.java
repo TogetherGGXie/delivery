@@ -1,6 +1,5 @@
 package com.delivery.main.common.persistence.template.modal;
 
-import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
 
@@ -27,8 +26,6 @@ public class Location implements Serializable {
      * 地点地址
      */
     private String address;
-    @TableId("location_id")
-    private Integer locationId;
 
 
     public String getLng() {
@@ -63,14 +60,6 @@ public class Location implements Serializable {
         this.address = address;
     }
 
-    public Integer getLocationId() {
-        return locationId;
-    }
-
-    public void setLocationId(Integer locationId) {
-        this.locationId = locationId;
-    }
-
     @Override
     public String toString() {
         return "Location{" +
@@ -78,7 +67,6 @@ public class Location implements Serializable {
         ", lat=" + lat +
         ", title=" + title +
         ", address=" + address +
-        ", locationId=" + locationId +
         "}";
     }
 }

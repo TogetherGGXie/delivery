@@ -58,7 +58,7 @@ public class LocationController {
         if(user == null){
             return new Result(-1,"登录状态失效");
         }else{
-            Location location = locationService.selectOne(new EntityWrapper<Location>().eq("lat", lat).eq("lng", lng));
+        Location location = locationService.selectOne(new EntityWrapper<Location>().eq("lat", lat).eq("lng", lng));
 //            List<HashMap<String,String>> newLocation = new ArrayList<HashMap<String,String>>();
 //            HashMap<String,String> hashMap = new HashMap<>();
 //            for(Location loc : location){
@@ -68,7 +68,7 @@ public class LocationController {
 //                hashMap.put("address",address);
 //                newLocation.add(hashMap);
 //            }
-            return new Result(200,"获取位置信息成功",location);
+        return new Result(200,"获取位置信息成功",location);
         }
     }
 }
