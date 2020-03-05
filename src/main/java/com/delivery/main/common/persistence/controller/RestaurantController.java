@@ -27,7 +27,7 @@ public class RestaurantController {
 
     @ApiOperation("添加餐馆")
     @ResponseBody
-    @RequestMapping(value = "api/addRestaurant" ,method = RequestMethod.POST)
+    @RequestMapping(value = "v1/addRestaurant" ,method = RequestMethod.POST)
     public Result addReataurant(@RequestBody Restaurant restaurant){
         boolean addRestaurant = restaurantService.insert(restaurant);
         if(addRestaurant){
@@ -51,7 +51,7 @@ public class RestaurantController {
     }
 
     @ApiOperation("获取多家餐馆")
-    @RequestMapping(value = "",method = RequestMethod.GET)
+    @RequestMapping(value = "v1/restaurants",method = RequestMethod.GET)
     @ResponseBody
     public Result getRestaurants(@RequestBody HashMap<String,String> restaurantInfo,HttpServletRequest request){
         User user = (User) request.getSession().getAttribute("user");
