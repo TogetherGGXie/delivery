@@ -53,7 +53,7 @@ public class CodeGenerator {
         // 表名生成策略
         strategy.setNaming(NamingStrategy.underline_to_camel);
         // 需要生成的表
-        strategy.setInclude(new String[] {"address","admin","category","comment","food","order","restaurant","user"});
+        strategy.setInclude(new String[] {"location"});
         strategy.setSuperServiceClass(null);
         strategy.setSuperServiceImplClass(null);
         strategy.setSuperMapperClass(null);
