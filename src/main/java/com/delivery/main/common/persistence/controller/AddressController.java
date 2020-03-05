@@ -30,7 +30,7 @@ public class AddressController {
     @ApiOperation("添加地址")
     @RequestMapping(value = "admin/address", method= RequestMethod.POST)
     @ResponseBody
-    public Result addAddress(@RequestBody HashMap<String,String> data, HttpServletRequest request){
+    public Result addAddress(@RequestParam HashMap<String,String> data, HttpServletRequest request){
         User user = (User)request.getSession().getAttribute("user");
         if(user == null){
             return new Result(-1,"登录状态失效");
@@ -52,7 +52,7 @@ public class AddressController {
     @ApiOperation("删除地址")
     @RequestMapping(value = "admin/deleteAddress",method = RequestMethod.POST)
     @ResponseBody
-    public Result deleteAddress(@RequestBody Integer address_id,HttpServletRequest request){
+    public Result deleteAddress(@RequestParam("address_id") Integer address_id,HttpServletRequest request){
         User user = (User)request.getSession().getAttribute("user");
         if(user == null){
             return new Result(-1,"登录状态失效");

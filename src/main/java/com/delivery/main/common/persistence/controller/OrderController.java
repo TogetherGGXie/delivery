@@ -49,7 +49,7 @@ public class OrderController {
     @ApiOperation("提交订单")
     @RequestMapping(value = "v1/wxorder", method= RequestMethod.POST)
     @ResponseBody
-    public Result submitOrders(@RequestBody HashMap<String,Object> requestDate, HttpServletRequest request) {
+    public Result submitOrders(@RequestParam HashMap<String,Object> requestDate, HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("user");
         if(user == null){
             return new Result(-1,"用户登录失败");

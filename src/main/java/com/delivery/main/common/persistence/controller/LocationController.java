@@ -29,7 +29,7 @@ public class LocationController {
     @ApiOperation("关键字搜索地方")
     @ResponseBody
     @RequestMapping(value = "suggestion" ,method = RequestMethod.GET)
-    public Result findAddressByKeyWord(@RequestBody String keyWord, HttpServletRequest request){
+    public Result findAddressByKeyWord(@RequestParam(value = "keyword" ,required = false) String keyWord, HttpServletRequest request){
         User user = (User)request.getSession().getAttribute("user");
         if(user == null){
             return new Result(-1,"登录状态失效");
