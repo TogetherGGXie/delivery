@@ -5,10 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.delivery.main.common.persistence.service.*;
-import com.delivery.main.common.persistence.template.modal.Admin;
-import com.delivery.main.common.persistence.template.modal.Comment;
-import com.delivery.main.common.persistence.template.modal.Food;
-import com.delivery.main.common.persistence.template.modal.Restaurant;
+import com.delivery.main.common.persistence.template.modal.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.models.auth.In;
@@ -146,6 +143,140 @@ public class AdminController {
         return res;
     }
 
+    @ApiOperation("管理员获取分类列表")
+    @RequestMapping("/getCategories/{restaurantId}")
+    public Result getComments(@PathVariable Integer restaurantId,
+                              @RequestBody HashMap<String, Object> pager,
+                              HttpServletRequest request) {
+        Result res = new Result();
+        Admin admin = (Admin)request.getSession().getAttribute("admin");
+        if (admin == null) {
+            res.setStatus(-1);
+            res.setMessage("登录状态失效");
+            return res;
+        } else if (admin.getAdminType() == 2 && restaurantId == null ) {
+            res.setStatus(-1);
+            res.setMessage("请选择商店");
+            return res;
+        } else if (admin.getAdminType() == 1 && (!restaurantId.equals(admin.getRestaurantId()))) {
+            res.setStatus(-1);
+            res.setMessage("您无权查看分类");
+            return res;
+        } else {
+            Integer page = (Integer) pager.get("page");
+            Integer pageSize = (Integer) pager.get("pageSize");
+            if(page == null) {
+                page = 1;
+            }
+            if (pageSize == null) {
+                pageSize = 5;
+            }
+            Page<HashMap<String, Object>> p = categoryService.getCategoryList(new Page<>(page,pageSize), restaurantId);
+            res.setStatus(200);
+            res.setMessage("获取分类成功");
+            res.setData(p);
+            return res;
+        }
+    }
+
+    @ApiOperation("店铺管理员添加分类")
+    @RequestMapping(value = "/addCategory", method = RequestMethod.POST)
+    public Result addFood(@RequestBody Category category,
+                          HttpServletRequest request) {
+        Result res = new Result();
+        Admin admin = (Admin)request.getSession().getAttribute("admin");
+        if (admin == null) {
+            res.setStatus(-1);
+            res.setMessage("登录状态失效");
+            return res;
+        } else if (admin.getAdminType() == 2 && category.getRestaurantId() == null ) {
+            res.setStatus(-1);
+            res.setMessage("请选择商店");
+            return res;
+        } else if (admin.getAdminType() == 1 && (!category.getRestaurantId().equals(admin.getRestaurantId()))) {
+            res.setStatus(-1);
+            res.setMessage("您无权添加分类");
+            return res;
+        }else {
+            Restaurant restaurant = restaurantService.selectById(admin.getAdminType() == 1 ? admin.getRestaurantId() : category.getRestaurantId());
+            if (restaurant == null) {
+                res.setStatus(-1);
+                res.setMessage("该商店不存在");
+                return res;
+            }
+            category.setCreateTime(new Date());
+            category.setStatus(1);
+            if (categoryService.insert(category)) {
+                res.setStatus(200);
+                res.setMessage("添加分类成功");
+                res.setData(category);
+                return res;
+            } else {
+                res.setStatus(-1);
+                res.setMessage("添加分类失败");
+                return res;
+            }
+        }
+    }
+
+    @ApiOperation("店铺管理员修改分类")
+    @RequestMapping(value = "/updateCategory", method = RequestMethod.POST)
+    public Result updateCategory(@RequestBody Category category,
+                             HttpServletRequest request) {
+        Result res = new Result();
+        Admin admin = (Admin)request.getSession().getAttribute("admin");
+        if (admin == null) {
+            res.setStatus(-1);
+            res.setMessage("登录状态失效");
+            return res;
+        } else if (admin.getAdminType() == 1 && (!admin.getRestaurantId().equals(category.getRestaurantId()))) {
+            res.setStatus(-1);
+            res.setMessage("权限不足，修改商品失败");
+            return res;
+        } else {
+            if (categoryService.updateById(category)) {
+                res.setStatus(200);
+                res.setMessage("修改商品成功");
+                return res;
+            } else {
+                res.setStatus(-1);
+                res.setMessage("修改商品失败");
+                return res;
+            }
+        }
+    }
+
+    @ApiOperation("店铺管理员删除分类")
+    @RequestMapping(value = "/deleteCategory", method = RequestMethod.POST)
+    public Result deleteCategory(@RequestBody HashMap<String, String> categoryForm,
+                             HttpServletRequest request) {
+        Result res = new Result();
+        Admin admin = (Admin)request.getSession().getAttribute("admin");
+        if (admin == null) {
+            res.setStatus(-1);
+            res.setMessage("登录状态失效");
+            return res;
+        } else {
+            Category category = categoryService.selectById(Integer.valueOf(categoryForm.get("categoryId")));
+            if (admin.getAdminType() == 1 && (!admin.getRestaurantId().equals(category.getRestaurantId()))) {
+                res.setStatus(-1);
+                res.setMessage("权限不足，删除分类失败");
+                return res;
+            } else {
+                category.setStatus(-1);
+                if (categoryService.updateById(category)) {
+                    res.setStatus(200);
+                    res.setMessage("删除分类成功");
+                    return res;
+                } else {
+                    res.setStatus(-1);
+                    res.setMessage("删除分类失败");
+                    return res;
+                }
+            }
+        }
+    }
+
     @ApiOperation("店铺管理员获取所有菜单及商品")
     @RequestMapping(value = "/getAllFoods/{restaurantId}", method = RequestMethod.GET)
     public Result getAllFoods(@PathVariable Integer restaurantId,
@@ -165,6 +296,42 @@ public class AdminController {
             res.setStatus(200);
             res.setMessage("获取菜品成功");
             res.setData(object);
+            return res;
+        }
+    }
+
+    @ApiOperation("管理员获取商品列表")
+    @RequestMapping("/getFoods/{restaurantId}")
+    public Result getFoodList(@PathVariable Integer restaurantId,
+                              @RequestBody HashMap<String, Object> pager,
+                              HttpServletRequest request) {
+        Result res = new Result();
+        Admin admin = (Admin)request.getSession().getAttribute("admin");
+        if (admin == null) {
+            res.setStatus(-1);
+            res.setMessage("登录状态失效");
+            return res;
+        } else if (admin.getAdminType() == 2 && restaurantId == null ) {
+            res.setStatus(-1);
+            res.setMessage("请选择商店");
+            return res;
+        } else if (admin.getAdminType() == 1 && (!restaurantId.equals(admin.getRestaurantId()))) {
+            res.setStatus(-1);
+            res.setMessage("您无权查看商品");
+            return res;
+        } else {
+            Integer page = (Integer) pager.get("page");
+            Integer pageSize = (Integer) pager.get("pageSize");
+            if(page == null) {
+                page = 1;
+            }
+            if (pageSize == null) {
+                pageSize = 5;
+            }
+            Page<HashMap<String, Object>> p = foodService.getFoodList(new Page<>(page,pageSize), restaurantId);
+            res.setStatus(200);
+            res.setMessage("获取分类成功");
+            res.setData(p);
             return res;
         }
     }
@@ -399,5 +566,188 @@ public class AdminController {
         }
     }
 
+    @ApiOperation("管理员获取所有用户列表")
+    @RequestMapping(value = "/getUsers", method = RequestMethod.GET)
+    public Result getUserList(@RequestBody HashMap<String, String> userForm,
+                              HttpServletRequest request) {
+        Result res = new Result();
+        Admin admin = (Admin)request.getSession().getAttribute("admin");
+        Integer page = Integer.valueOf(userForm.get("page"));
+        Integer pageSize = Integer.valueOf(userForm.get("pageSize"));;
+        if (admin == null) {
+            res.setStatus(-1);
+            res.setMessage("登录状态失效");
+            return res;
+        }
+        if (admin.getAdminType() == 1 ) {
+            res.setStatus(-1);
+            res.setMessage("您的权限不足");
+            return res;
+        } else {
+            if(page == null) {
+                page = 1;
+            }
+            if (pageSize == null) {
+                pageSize = 5;
+            }
+            Page<HashMap<String, Object>> pager = userService.getUserList(new Page<>(page,pageSize));
+            res.setStatus(200);
+            res.setMessage("获取用户成功");
+            res.setData(pager);
+            return res;
+        }
+    }
+
+    @ApiOperation("店铺管理员修改商品")
+    @RequestMapping(value = "/updateUser", method = RequestMethod.POST)
+    public Result updateFood(@RequestBody User user,
+                             HttpServletRequest request) {
+        Result res = new Result();
+        Admin admin = (Admin)request.getSession().getAttribute("admin");
+        if (admin == null) {
+            res.setStatus(-1);
+            res.setMessage("登录状态失效");
+            return res;
+        } else if (admin.getAdminType() == 1) {
+            res.setStatus(-1);
+            res.setMessage("权限不足，修改用户失败");
+            return res;
+        } else {
+            if (userService.updateById(user)) {
+                res.setStatus(200);
+                res.setMessage("修改用户成功");
+                return res;
+            } else {
+                res.setStatus(-1);
+                res.setMessage("修改用户失败");
+                return res;
+            }
+        }
+    }
+
+    @ApiOperation("管理员获取店铺列表")
+    @RequestMapping("/getRestaurants")
+    public Result getRestaurants(@RequestBody HashMap<String, Object> pager,
+                              HttpServletRequest request) {
+        Result res = new Result();
+        Admin admin = (Admin)request.getSession().getAttribute("admin");
+        if (admin == null) {
+            res.setStatus(-1);
+            res.setMessage("登录状态失效");
+            return res;
+        } else if (admin.getAdminType() == 1) {
+            res.setStatus(-1);
+            res.setMessage("您的权限不足");
+            return res;
+        } else {
+            Integer page = (Integer) pager.get("page");
+            Integer pageSize = (Integer) pager.get("pageSize");
+            if(page == null) {
+                page = 1;
+            }
+            if (pageSize == null) {
+                pageSize = 5;
+            }
+            Page<HashMap<String, Object>> p = restaurantService.getRestaurantList(new Page<>(page,pageSize));
+            res.setStatus(200);
+            res.setMessage("获取商店列表成功");
+            res.setData(p);
+            return res;
+        }
+    }
+
+    @ApiOperation("店铺管理员添加商店")
+    @RequestMapping(value = "/addRestaurant", method = RequestMethod.POST)
+    public Result addFood(@RequestBody Restaurant restaurant,
+                          HttpServletRequest request) {
+        Result res = new Result();
+        Admin admin = (Admin)request.getSession().getAttribute("admin");
+        if (admin == null) {
+            res.setStatus(-1);
+            res.setMessage("登录状态失效");
+            return res;
+        } else if (admin.getAdminType() == 1 && !admin.getRestaurantId().equals(null) ) {
+            res.setStatus(-1);
+            res.setMessage("您已注册过商铺");
+            return res;
+        } else {
+            restaurant.setOrderScore(new BigDecimal(0));
+            restaurant.setDeliveryScore(new BigDecimal(0));
+            restaurant.setPackageScore(new BigDecimal(0));
+            restaurant.setCommentNumber(0);
+            restaurant.setCreateTime(new Date());
+            restaurant.setLastUpdTime(new Date());
+            restaurant.setStatus(1);
+            if (restaurantService.insert(restaurant)) {
+                res.setStatus(200);
+                res.setMessage("添加商铺成功");
+                res.setData(restaurant);
+                return res;
+            } else {
+                res.setStatus(-1);
+                res.setMessage("添加商铺失败");
+                return res;
+            }
+        }
+    }
+
+    @ApiOperation("店铺管理员修改商铺")
+    @RequestMapping(value = "/updateRestaurant", method = RequestMethod.POST)
+    public Result updateCategory(@RequestBody Restaurant restaurant,
+                                 HttpServletRequest request) {
+        Result res = new Result();
+        Admin admin = (Admin)request.getSession().getAttribute("admin");
+        if (admin == null) {
+            res.setStatus(-1);
+            res.setMessage("登录状态失效");
+            return res;
+        } else if (admin.getAdminType() == 1 && (!admin.getRestaurantId().equals(restaurant.getRestaurantId()))) {
+            res.setStatus(-1);
+            res.setMessage("权限不足，修改店铺失败");
+            return res;
+        } else {
+            restaurant.setLastUpdTime(new Date());
+            if (restaurantService.updateById(restaurant)) {
+                res.setStatus(200);
+                res.setMessage("修改店铺成功");
+                return res;
+            } else {
+                res.setStatus(-1);
+                res.setMessage("修改店铺失败");
+                return res;
+            }
+        }
+    }
+
+    @ApiOperation("店铺管理员删除店铺")
+    @RequestMapping(value = "/deleteRestaurant", method = RequestMethod.POST)
+    public Result deleteRestaurant(@RequestBody HashMap<String, String> restaurantForm,
+                                 HttpServletRequest request) {
+        Result res = new Result();
+        Admin admin = (Admin)request.getSession().getAttribute("admin");
+        if (admin == null) {
+            res.setStatus(-1);
+            res.setMessage("登录状态失效");
+            return res;
+        } else {
+            Restaurant restaurant = restaurantService.selectById(Integer.valueOf(restaurantForm.get("restaurantId")));
+            if (admin.getAdminType() == 1 && (!admin.getRestaurantId().equals(restaurant.getRestaurantId()))) {
+                res.setStatus(-1);
+                res.setMessage("权限不足，删除店铺失败");
+                return res;
+            } else {
+                restaurant.setStatus(-1);
+                if (restaurantService.updateById(restaurant)) {
+                    res.setStatus(200);
+                    res.setMessage("删除店铺成功");
+                    return res;
+                } else {
+                    res.setStatus(-1);
+                    res.setMessage("删除店铺失败");
+                    return res;
+                }
+            }
+        }
+    }
 }
 
