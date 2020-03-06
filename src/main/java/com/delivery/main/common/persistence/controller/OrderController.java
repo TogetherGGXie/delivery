@@ -58,7 +58,6 @@ public class OrderController {
             return new Result(-1,"用户登录失败");
         }else {
             boolean orderResult = orderService.insert(orderDetail);
-
             if (orderResult) {
                 String foodDetails = orderDetail.getFoodDetails();
                 HashMap<String, String> hashMap = new HashMap<String, String>();
