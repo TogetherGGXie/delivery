@@ -66,57 +66,59 @@ public class LocationController {
                                    HttpServletRequest request) throws IOException {
         StringBuilder resultData = new StringBuilder();
         StringBuilder https = new StringBuilder("http://restapi.amap.com/v3/geocode/regeo?key=");
-        //经纬度地址
+//经纬度地址
         StringBuilder localhost = new StringBuilder("&location="+lng+","+lat);
         StringBuilder httpsTail = new StringBuilder("&poitype=&radius=&extensions=base&batch=true");
         String url = https.append(key).append(localhost).append(httpsTail).toString();
-        //拼接出来的地址
-        //System.out.println(https1.append(key).append(localhost1).append(httpsTail).toString());
-        // String url ="http://restapi.amap.com/v3/geocode/regeo?key=自己申请的key&location=116.310003,39.991957&poitype=&radius=&extensions=base&batch=true&roadlevel=";
-        URL myURL = null;
-        URLConnection httpsConn = null;
-        try {
-            myURL = new URL(url);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        InputStreamReader insr = null;
-        BufferedReader br = null;
-        try {
-            httpsConn = myURL.openConnection();// 不使用代理
-            if (httpsConn != null) {
-                insr = new InputStreamReader(httpsConn.getInputStream(), "UTF-8");
-                br = new BufferedReader(insr);
-                String data = null;
-                while ((data = br.readLine()) != null) {
-                    resultData.append(data);
+    //拼接出来的地址
+    //System.out.println(https1.append(key).append(localhost1).append(httpsTail).toString());
+    // String url ="http://restapi.amap.com/v3/geocode/regeo?key=自己申请的key&location=116.310003,39.991957&poitype=&radius=&extensions=base&batch=true&roadlevel=";
+            URL myURL = null;
+            URLConnection httpsConn = null;
+            try {
+                myURL = new URL(url);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            InputStreamReader insr = null;
+            BufferedReader br = null;
+            try {
+                httpsConn = myURL.openConnection();// 不使用代理
+                if (httpsConn != null) {
+                    insr = new InputStreamReader(httpsConn.getInputStream(), "UTF-8");
+                    br = new BufferedReader(insr);
+                    String data = null;
+                    while ((data = br.readLine()) != null) {
+                        resultData.append(data);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (insr != null) {
+                    insr.close();
+                }
+                if (br != null) {
+                    br.close();
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (insr != null) {
-                insr.close();
+            if (resultData.toString().indexOf("regeocodes") == 0) {
+                return null;
             }
-            if (br != null) {
-                br.close();
-            }
-        }
-        if (resultData.toString().indexOf("regeocodes") == 0) {
-            return null;
-        }
-        String str = JSONObject.fromObject(resultData.toString()).getString("regeocodes");
-        //城市切割
-        String[] strr = str.split("\",\"city\":\"");
-        if (strr.length < 2 && strr.length == 1) {
-            //直辖市
-            String[] sr = str.split("\"province\":\"");
-            String[] srr = sr[1].split("\",\"city");
-            return srr[0];
-        }
-        //非直辖市
-        String[] strrr = strr[1].split("\",\"citycode\":");
-        return strrr[0];
+            String str = JSONObject.fromObject(resultData.toString()).getString("regeocodes");
+//        System.out.println(str);
+    //城市切割
+//            String[] strr = str.split("\",\"city\":\"");
+//            if (strr.length < 2 && strr.length == 1) {
+//                //直辖市
+//                String[] sr = str.split("\"province\":\"");
+//                String[] srr = sr[1].split("\",\"city");
+//                return srr[0];
+//            }
+    //非直辖市
+//            String[] strrr = strr[1].split("\",\"citycode\":");
+//            return strrr[0];
+            return str;
     }
 
 
