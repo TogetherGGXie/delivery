@@ -2,7 +2,9 @@ package com.delivery.main.common.persistence.controller;
 
 
 import com.delivery.main.common.persistence.service.LocationService;
+import com.delivery.main.util.Result;
 import io.swagger.annotations.ApiOperation;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,10 @@ import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -34,7 +40,7 @@ public class LocationController {
     @ApiOperation("关键字搜索地方")
     @ResponseBody
     @RequestMapping(value = "suggestion" ,method = RequestMethod.POST)
-    public String findAddressByKeyWord(@RequestParam(value = "keyword" ,required = false) String keyWord, HttpServletRequest request){
+    public Result findAddressByKeyWord(@RequestParam(value = "keyword" ,required = false) String keyWord, HttpServletRequest request){
             StringBuffer s = new StringBuffer();
             s.append("key=" + key + "&keywords=");
             if (keyWord.contains(" ")) {
@@ -54,7 +60,24 @@ public class LocationController {
             String around = sendPost("http://restapi.amap.com/v3/place/text", s.toString());
 //            logger.info(around);
         System.out.println(around);
-            return around;
+        JSONObject obj = new JSONObject().fromObject(around);
+        JSONArray jsonArray = (JSONArray) obj.get("pois");
+        System.out.println(jsonArray);
+
+        List<HashMap<String,Object>> list = new LinkedList<>();
+        for(Object i : jsonArray){
+            HashMap<String,Object> hashMap = new HashMap<String,Object>();
+            System.out.println(i);
+            Map entry = (Map)i;
+            System.out.println(entry+"========");
+            Object title = entry.get("name");
+            Object address = entry.get("address");
+            hashMap.put("title",title);
+            hashMap.put("address",address);
+            list.add(hashMap);
+        }
+
+            return new Result(200,"获取成功",list);
 
     }
 
