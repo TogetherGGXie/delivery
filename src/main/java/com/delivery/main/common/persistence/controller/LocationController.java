@@ -1,11 +1,7 @@
 package com.delivery.main.common.persistence.controller;
 
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.delivery.main.common.persistence.service.LocationService;
-import com.delivery.main.common.persistence.template.modal.Location;
-import com.delivery.main.common.persistence.template.modal.User;
-import com.delivery.main.util.Result;
 import io.swagger.annotations.ApiOperation;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.List;
 
 /**
  * <p>
@@ -38,25 +34,77 @@ public class LocationController {
     @ApiOperation("关键字搜索地方")
     @ResponseBody
     @RequestMapping(value = "suggestion" ,method = RequestMethod.POST)
-    public Result findAddressByKeyWord(@RequestParam(value = "keyword" ,required = false) String keyWord, HttpServletRequest request){
-        User user = (User)request.getSession().getAttribute("user");
-        if(user == null){
-            return new Result(-1,"登录状态失效");
-        }else{
-            System.out.println("测试------------------");
-            List<Location> location = locationService.selectList(new EntityWrapper<Location>().like("title", keyWord));
-//            List<HashMap<String,String>> newLocation = new ArrayList<HashMap<String,String>>();
-//            HashMap<String,String> hashMap = new HashMap<>();
-//            for(Location loc : location){
-//                String title = loc.getTitle();
-//                String address = loc.getAddress();
-//                hashMap.put("title",title);
-//                hashMap.put("address",address);
-//                newLocation.add(hashMap);
-//            }
-            return new Result(200,"获取位置信息成功",location);
-        }
+    public String findAddressByKeyWord(@RequestParam(value = "keyword" ,required = false) String keyWord, HttpServletRequest request){
+            StringBuffer s = new StringBuffer();
+            s.append("key=" + key + "&keywords=");
+            if (keyWord.contains(" ")) {
+                String[] str = keyWord.split(" ");
+                for (int i = 0; i < str.length; i++) {
+                    if (i == 0) {
+                        s.append(str[i]);
+                    } else {
+                        s.append("+" + str[i]);
+                    }
+                }
+            } else {
+                s.append(keyWord);
+            }
+//            s.append("&city=" + city);
+            s.append("&offset=10&page=1");
+            String around = sendPost("http://restapi.amap.com/v3/place/text", s.toString());
+//            logger.info(around);
+        System.out.println(around);
+            return around;
+
     }
+
+    public static String sendPost(String url, String param) {
+        PrintWriter out = null;
+        BufferedReader in = null;
+        String result = "";
+        try {
+            URL realUrl = new URL(url);
+            // 打开和URL之间的连接
+            URLConnection conn = realUrl.openConnection();
+            // 设置通用的请求属性
+            conn.setRequestProperty("accept", "*/*");
+            conn.setRequestProperty("connection", "Keep-Alive");
+            conn.setRequestProperty("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+            // 发送POST请求必须设置如下两行
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            // 获取URLConnection对象对应的输出流
+            out = new PrintWriter(conn.getOutputStream());
+            // 发送请求参数
+            out.print(param);
+            // flush输出流的缓冲
+            out.flush();
+            // 定义BufferedReader输入流来读取URL的响应
+            in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line;
+            while ((line = in.readLine()) != null) {
+                result += line;
+            }
+        } catch (Exception e) {
+//            logger.info("发送 POST 请求出现异常！" + e);
+            e.printStackTrace();
+        }
+        // 使用finally块来关闭输出流、输入流
+        finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return result;
+    }
+
 
     @ApiOperation("根据lat，lng获取详情位置")
     @ResponseBody
