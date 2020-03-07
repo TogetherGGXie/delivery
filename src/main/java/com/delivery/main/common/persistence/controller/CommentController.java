@@ -115,7 +115,7 @@ public class CommentController {
             } else {
                 Restaurant restaurant = restaurantService.selectById(restaurantId);
                 Integer commentNum = restaurant.getCommentNumber();
-                restaurant.setOrderScore(restaurant.getOrderScore().multiply(new BigDecimal(commentNum)).add(new BigDecimal(orderScore)).divide(new BigDecimal(commentNum + 1)));
+                restaurant.setOrderScore(restaurant.getOrderScore().multiply(new BigDecimal(commentNum)).add(new BigDecimal(orderScore)).divide(new BigDecimal(commentNum + 1), 2));
                 restaurant.setCommentNumber(commentNum + 1);
                 Comment co = new Comment();
                 co.setUserId(user.getUserId());
