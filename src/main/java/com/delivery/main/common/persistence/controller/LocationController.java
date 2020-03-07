@@ -39,7 +39,7 @@ public class LocationController {
 
     @ApiOperation("关键字搜索地方")
     @ResponseBody
-    @RequestMapping(value = "suggestion" ,method = RequestMethod.POST)
+    @RequestMapping(value = "suggestion" ,method = RequestMethod.GET)
     public Result findAddressByKeyWord(@RequestParam(value = "keyword" ,required = false) String keyWord, HttpServletRequest request){
             StringBuffer s = new StringBuffer();
             s.append("key=" + key + "&keywords=");
@@ -131,8 +131,8 @@ public class LocationController {
 
     @ApiOperation("根据lat，lng获取详情位置")
     @ResponseBody
-    @RequestMapping(value = "detailLocation" ,method = RequestMethod.POST)
-    public String findAddressByLat(@RequestParam(value = "lat" ,required = false) String lat,
+    @RequestMapping(value = "detailLocation" ,method = RequestMethod.GET)
+    public Result findAddressByLat(@RequestParam(value = "lat" ,required = false) String lat,
                                    @RequestParam(value = "lng" ,required = false) String lng,
                                    HttpServletRequest request) throws IOException {
         StringBuilder resultData = new StringBuilder();
@@ -177,7 +177,10 @@ public class LocationController {
                 return null;
             }
             String str = JSONObject.fromObject(resultData.toString()).getString("regeocodes");
+//            String formatted_address = String.valueOf(str.indexOf("formatted_address"));
+//            return formatted_address;
 //        System.out.println(str);
+//
     //城市切割
 //            String[] strr = str.split("\",\"city\":\"");
 //            if (strr.length < 2 && strr.length == 1) {
@@ -189,7 +192,15 @@ public class LocationController {
     //非直辖市
 //            String[] strrr = strr[1].split("\",\"citycode\":");
 //            return strrr[0];
-            return str;
+//
+        JSONArray jsonArray = new JSONArray().fromObject(str);
+        Object formatted_address = jsonArray.getJSONObject(0).get("formatted_address");
+        System.out.println(formatted_address);
+        String s = formatted_address.toString();
+        HashMap<String,Object> hashMap = new HashMap<>();
+        hashMap.put("address",formatted_address);
+        return new Result(200,"获取位置成功",hashMap);
+
     }
 
 
