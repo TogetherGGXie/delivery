@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -55,17 +54,14 @@ public class RestaurantController {
     @ApiOperation("获取多家餐馆")
     @RequestMapping(value = "restaurants",method = RequestMethod.GET)
     @ResponseBody
-    public Result getRestaurants(@RequestParam HashMap<String,String> restaurantInfo,HttpServletRequest request){
+    public Result getRestaurants(@RequestParam(value = "lat" ,required = false) String lat,
+                                 @RequestParam(value = "lng" ,required = false) String lng,
+                                 HttpServletRequest request){
         User user = (User) request.getSession().getAttribute("user");
         if(user == null ){
             return new Result(-1,"登录已过期");
         }else {
-        System.out.println(restaurantInfo);
-            String lng = restaurantInfo.get("lng");
-            String lat = restaurantInfo.get("lat");
-            String offset = restaurantInfo.get("offset");
-            String pageSize = restaurantInfo.get("limit");
-            List<Restaurant> restaurants = restaurantService.selectList(new EntityWrapper<Restaurant>().eq("lng", lng).eq("lat", lat));
+            List<Restaurant> restaurants = restaurantService.queryList(lng,lat);
             return new Result(200, "获得店铺信息成功", restaurants);
         }
     }

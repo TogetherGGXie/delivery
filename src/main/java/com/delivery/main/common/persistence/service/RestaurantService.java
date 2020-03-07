@@ -5,6 +5,7 @@ import com.delivery.main.common.persistence.template.modal.Restaurant;
 import com.baomidou.mybatisplus.service.IService;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * <p>
@@ -17,4 +18,5 @@ import java.util.HashMap;
 public interface RestaurantService extends IService<Restaurant> {
 
     Page<HashMap<String, Object>> getRestaurantList(Page<HashMap<String, Object>> page);
+    List<Restaurant> queryList (String lng,String lat);
 }
