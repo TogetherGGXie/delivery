@@ -42,4 +42,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         hashMap.put("orderInfo",order);
         return hashMap;
     }
+
+    @Override
+    public Order queryOne(Integer orderId) {
+        HashMap<String, Object> o = orderMapper.queryOne(orderId);
+        Order order = new Order();
+        order.setOrderId(orderId);
+        order.setUserId((Integer)(o.get("userId")));
+        order.setRestaurantId((Integer)(o.get("restaurantId")));
+        return order;
+    }
 }

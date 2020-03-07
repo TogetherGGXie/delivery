@@ -1,5 +1,9 @@
 package com.delivery.main.common.persistence.service.serviceImpl;
 
+import cn.hutool.core.collection.CollUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.delivery.main.common.persistence.dao.CommentMapper;
@@ -28,6 +32,13 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Override
     public Page<HashMap<String, Object>> getComments(Page<HashMap<String, Object>> pager, Integer restaurantId) {
         Page<HashMap<String, Object>> page = new Page<>(pager.getCurrent(),pager.getSize());
-        return page.setRecords(commentMapper.getComments(page, restaurantId));
+        List<HashMap<String, Object>> res = commentMapper.getComments(page, restaurantId);
+        for (HashMap<String, Object> tmp : res) {
+            String pic = (String) tmp.get("picture");
+            JSONArray jsonArray = (JSONArray) JSONArray.parse(pic);
+            List<String> list = JSONArray.parseArray(jsonArray.toJSONString(), String.class);
+            tmp.put("pictures", list);
+        }
+        return page.setRecords(res);
     }
 }

@@ -8,6 +8,7 @@ import com.delivery.main.common.persistence.service.*;
 import com.delivery.main.common.persistence.template.modal.*;
 import io.swagger.annotations.*;
 import io.swagger.models.auth.In;
+import org.omg.CORBA.OBJECT_NOT_EXIST;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -77,6 +78,7 @@ public class AdminController {
         }else {
             res.setStatus(200);
             res.setMessage("登陆成功");
+            res.setData(new HashMap<String, Object>().put("adminType", admin.getAdminType()));
             request.getSession().setAttribute("admin", admin);
         }
         return res;
@@ -90,6 +92,37 @@ public class AdminController {
         request.getSession().invalidate();
         res.setMessage("注销成功");
         return res;
+    }
+
+    @ApiOperation("管理员获取个人信息")
+    @RequestMapping(value = "/adminInfo", method = RequestMethod.GET)
+    public Result adminInfo(HttpServletRequest request) {
+        Result res = new Result();
+        Admin admin = (Admin)request.getSession().getAttribute("admin");
+        res.setStatus(200);
+        res.setMessage("获取个人信息成功");
+        res.setData(admin);
+        return res;
+    }
+
+    @ApiOperation("管理员更新个人信息")
+    @ApiImplicitParam(name = "adminForm", value = "{adminName:admin, password:admin, city: xxx, avatar:xxx}")
+    @RequestMapping(value = "/updateInfo", method = RequestMethod.GET)
+    public Result updateInfo(@RequestBody HashMap<String, Object> adminForm, HttpServletRequest request) {
+        Result res = new Result();
+        Admin admin = (Admin)request.getSession().getAttribute("admin");
+        admin.setAvatar(adminForm.get("avatar").toString());
+        admin.setAdminName(adminForm.get("adminName").toString());
+        admin.setPassword(adminForm.get("password").toString());
+        if (adminService.updateById(admin)) {
+            res.setStatus(200);
+            res.setMessage("获取个人信息成功");
+            res.setData(admin);
+            return res;
+        } else {
+            return new Result(-1, "修改个人信息失败");
+        }
+
     }
 
     @ApiOperation("查询用户名是否可用")

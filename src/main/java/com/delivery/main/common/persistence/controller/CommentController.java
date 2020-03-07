@@ -4,8 +4,10 @@ package com.delivery.main.common.persistence.controller;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.delivery.main.common.persistence.service.CommentService;
+import com.delivery.main.common.persistence.service.OrderService;
 import com.delivery.main.common.persistence.service.RestaurantService;
 import com.delivery.main.common.persistence.template.modal.Comment;
+import com.delivery.main.common.persistence.template.modal.Order;
 import com.delivery.main.common.persistence.template.modal.Restaurant;
 import com.delivery.main.common.persistence.template.modal.User;
 import com.delivery.main.util.Result;
@@ -44,6 +46,9 @@ public class CommentController {
 
     @Autowired
     private RestaurantService restaurantService;
+
+    @Autowired
+    private OrderService orderService;
 
 
     @ApiOperation("获取店铺评论")
@@ -89,11 +94,21 @@ public class CommentController {
             return res;
         } else {
             Comment c = commentService.selectOne(new EntityWrapper<Comment>().eq("order_id", orderId));
-            if (c != null) {
+            Order ord = orderService.queryOne(orderId);
+            System.out.println(ord.toString());
+            Order o = orderService.queryOne(orderId);
+            System.out.println(o.toString());
+            if (o == null) {
+                res.setStatus(-1);
+                res.setMessage("该订单不存在");
+                return res;
+            }else if (c != null) {
                 res.setStatus(-1);
                 res.setMessage("您已评论过该订单");
                 return res;
-            } else if (!c.getUserId().equals(user.getUserId())) {
+            } else if (!o.getUserId().equals(user.getUserId())) {
+                System.out.println("o.userId" + o.getUserId());
+                System.out.println("user.userId" + user.getUserId());
                 res.setStatus(-1);
                 res.setMessage("您无法评价该订单");
                 return res;

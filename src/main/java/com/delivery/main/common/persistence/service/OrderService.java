@@ -15,4 +15,5 @@ import java.util.HashMap;
  */
 public interface OrderService extends IService<Order> {
     HashMap<String,Object> queryOrder(Order order);
+    Order queryOne(Integer orderId);
 }
