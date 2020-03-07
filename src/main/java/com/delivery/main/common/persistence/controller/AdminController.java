@@ -6,8 +6,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.delivery.main.common.persistence.service.*;
 import com.delivery.main.common.persistence.template.modal.*;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.delivery.main.util.Result;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * <p>
@@ -60,6 +60,7 @@ public class AdminController {
 
     @ApiOperation("管理员登录")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @ApiImplicitParam(name = "loginForm", value = "{adminName:admin,password:admin}")
     public Result adminLogin(@RequestBody HashMap<String, String> loginForm,
                              HttpServletRequest request) {
         Result res = new Result();
@@ -92,6 +93,7 @@ public class AdminController {
     }
 
     @ApiOperation("查询用户名是否可用")
+    @ApiImplicitParam(name = "registerForm", value = "{adminName:admin}")
     @RequestMapping(value = "/checkAdminName", method = RequestMethod.GET)
     public Result checkAdminName(@RequestBody HashMap<String, String> registerForm) {
         Result res = new Result();
@@ -117,6 +119,7 @@ public class AdminController {
 
     @ApiOperation("管理员注册")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @ApiImplicitParam(name = "registerForm", value = "{adminName:admin,password:admin,avatar:xxxx,city:xxx}")
     public Result adminRegister(@RequestBody HashMap<String, String> registerForm) {
         Result res = new Result();
         String adminName = registerForm.get("adminName");
@@ -144,7 +147,8 @@ public class AdminController {
     }
 
     @ApiOperation("管理员获取分类列表")
-    @RequestMapping("/getCategories/{restaurantId}")
+    @RequestMapping(value = "/getCategories/{restaurantId}", method = RequestMethod.GET)
+    @ApiImplicitParam(name = "page", value = "{page:1,pageSize:5}")
     public Result getComments(@PathVariable Integer restaurantId,
                               @RequestBody HashMap<String, Object> pager,
                               HttpServletRequest request) {
@@ -181,6 +185,7 @@ public class AdminController {
 
     @ApiOperation("店铺管理员添加分类")
     @RequestMapping(value = "/addCategory", method = RequestMethod.POST)
+    @ApiImplicitParam(name = "category", value = "{restaurantId:1,name:主食,icon:xxxx}")
     public Result addFood(@RequestBody Category category,
                           HttpServletRequest request) {
         Result res = new Result();
@@ -221,6 +226,7 @@ public class AdminController {
 
     @ApiOperation("店铺管理员修改分类")
     @RequestMapping(value = "/updateCategory", method = RequestMethod.POST)
+    @ApiImplicitParam(name = "category", value = "{categoryId:1, restaurantId:1,name:主食,icon:xxxx,status:1}")
     public Result updateCategory(@RequestBody Category category,
                              HttpServletRequest request) {
         Result res = new Result();
@@ -248,6 +254,7 @@ public class AdminController {
 
     @ApiOperation("店铺管理员删除分类")
     @RequestMapping(value = "/deleteCategory", method = RequestMethod.POST)
+    @ApiImplicitParam(name = "category", value = "{categoryId:1,status:-1}")
     public Result deleteCategory(@RequestBody HashMap<String, String> categoryForm,
                              HttpServletRequest request) {
         Result res = new Result();
@@ -301,7 +308,8 @@ public class AdminController {
     }
 
     @ApiOperation("管理员获取商品列表")
-    @RequestMapping("/getFoods/{restaurantId}")
+    @RequestMapping(value = "/getFoods/{restaurantId}", method = RequestMethod.GET)
+    @ApiImplicitParam(name = "page", value = "{page:1,pageSize:5}")
     public Result getFoodList(@PathVariable Integer restaurantId,
                               @RequestBody HashMap<String, Object> pager,
                               HttpServletRequest request) {
@@ -338,6 +346,8 @@ public class AdminController {
 
     @ApiOperation("店铺管理员添加商品")
     @RequestMapping(value = "/addFood", method = RequestMethod.POST)
+    @ApiImplicitParam(name = "food", value = "{restaurantId:1, categoryId:1, name:主食," +
+                                    "price:1, picture:xxxx, description:xxx, tag:xxx, promotionInfo:xxx }")
     public Result addFood(@RequestBody Food food,
                               HttpServletRequest request) {
         Result res = new Result();
@@ -381,6 +391,8 @@ public class AdminController {
 
     @ApiOperation("店铺管理员修改商品")
     @RequestMapping(value = "/updateFood", method = RequestMethod.POST)
+    @ApiImplicitParam(name = "food", value = "{restaurantId:1, categoryId:1, name:主食, price:1, " +
+                                    "picture:xxxx, description:xxx, tag:xxx, promotionInfo:xxx,status:1 }")
     public Result updateFood(@RequestBody Food food,
                               HttpServletRequest request) {
         Result res = new Result();
@@ -409,6 +421,7 @@ public class AdminController {
 
     @ApiOperation("店铺管理员删除商品")
     @RequestMapping(value = "/deleteFood", method = RequestMethod.POST)
+    @ApiImplicitParam(name = "food", value = "{restaurantId:1, foodId:1 }")
     public Result deleteFood(@RequestBody HashMap<String, String> foodForm,
                               HttpServletRequest request) {
         Result res = new Result();
@@ -441,6 +454,7 @@ public class AdminController {
 
     @ApiOperation("店铺管理员获取店铺所有评论")
     @RequestMapping(value = "/getComments", method = RequestMethod.GET)
+    @ApiImplicitParam(name = "commentForm", value = "{restaurantId:1, page:1, pageSize:1 }")
     public Result getComments(@RequestBody HashMap<String, String> commentForm,
                               HttpServletRequest request) {
         Result res = new Result();
@@ -482,6 +496,7 @@ public class AdminController {
 
     @ApiOperation("店铺管理员回复评论")
     @RequestMapping(value = "/reply", method = RequestMethod.POST)
+    @ApiImplicitParam(name = "commentForm", value = "{restaurantId:1, page:1, pageSize:1 }")
     public Result reply(@RequestBody HashMap<String, String> replyForm,
                               HttpServletRequest request) {
         Result res = new Result();
@@ -529,6 +544,7 @@ public class AdminController {
 
     @ApiOperation("店铺删除评论")
     @RequestMapping(value = "/deleteComment", method = RequestMethod.POST)
+    @ApiImplicitParam(name = "replyForm", value = "{commentId:1}")
     public Result deleteComment(@RequestBody HashMap<String, String> replyForm,
                         HttpServletRequest request) {
         Result res = new Result();
@@ -568,6 +584,7 @@ public class AdminController {
 
     @ApiOperation("管理员获取所有用户列表")
     @RequestMapping(value = "/getUsers", method = RequestMethod.GET)
+    @ApiImplicitParam(name = "page", value = "{page:1, pageSize:5 }")
     public Result getUserList(@RequestBody HashMap<String, String> userForm,
                               HttpServletRequest request) {
         Result res = new Result();
@@ -598,8 +615,9 @@ public class AdminController {
         }
     }
 
-    @ApiOperation("店铺管理员修改商品")
+    @ApiOperation("店铺管理员修改用户")
     @RequestMapping(value = "/updateUser", method = RequestMethod.POST)
+    @ApiImplicitParam(name = "User", value = "{userId:1, phone:1, currentAddressId:1 }")
     public Result updateFood(@RequestBody User user,
                              HttpServletRequest request) {
         Result res = new Result();
@@ -626,7 +644,8 @@ public class AdminController {
     }
 
     @ApiOperation("管理员获取店铺列表")
-    @RequestMapping("/getRestaurants")
+    @RequestMapping(value = "/getRestaurants", method = RequestMethod.GET)
+    @ApiImplicitParam(name = "page", value = "{page:1, pageSize:1 }")
     public Result getRestaurants(@RequestBody HashMap<String, Object> pager,
                               HttpServletRequest request) {
         Result res = new Result();
@@ -658,6 +677,10 @@ public class AdminController {
 
     @ApiOperation("店铺管理员添加商店")
     @RequestMapping(value = "/addRestaurant", method = RequestMethod.POST)
+    @ApiImplicitParam(name = "restaurant", value = "{restaurantId:1, name:1, picture:1, deliveryTime:10," +
+                                         " deliveryFee:5, minPriceTip:10, businessTIme: , businessTimeStart:" +
+                                         " businessTImeEnd: ,notice: ,background: , address: , phone: ," +
+                                         " lng: , lat: }")
     public Result addFood(@RequestBody Restaurant restaurant,
                           HttpServletRequest request) {
         Result res = new Result();
@@ -671,6 +694,7 @@ public class AdminController {
             res.setMessage("您已注册过商铺");
             return res;
         } else {
+            restaurant.setUserId(admin.getAdminId());
             restaurant.setOrderScore(new BigDecimal(0));
             restaurant.setDeliveryScore(new BigDecimal(0));
             restaurant.setPackageScore(new BigDecimal(0));
@@ -693,6 +717,10 @@ public class AdminController {
 
     @ApiOperation("店铺管理员修改商铺")
     @RequestMapping(value = "/updateRestaurant", method = RequestMethod.POST)
+    @ApiImplicitParam(name = "restaurant", value = "{restaurantId:1, name:1, picture:1, deliveryTime:10," +
+            " deliveryFee:5, minPriceTip:10, businessTIme: , businessTimeStart:" +
+            " businessTImeEnd: ,notice: ,background: , address: , phone: ," +
+            " lng: , lat: }")
     public Result updateCategory(@RequestBody Restaurant restaurant,
                                  HttpServletRequest request) {
         Result res = new Result();
@@ -721,6 +749,7 @@ public class AdminController {
 
     @ApiOperation("店铺管理员删除店铺")
     @RequestMapping(value = "/deleteRestaurant", method = RequestMethod.POST)
+    @ApiImplicitParam(name = "restaurant", value = "{restaurantId:1}")
     public Result deleteRestaurant(@RequestBody HashMap<String, String> restaurantForm,
                                  HttpServletRequest request) {
         Result res = new Result();
