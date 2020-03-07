@@ -1,7 +1,6 @@
 package com.delivery.main.common.persistence.controller;
 
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.delivery.main.common.persistence.service.OrderService;
 import com.delivery.main.common.persistence.template.modal.Order;
 import com.delivery.main.common.persistence.template.modal.User;
@@ -37,7 +36,7 @@ public class OrderController {
         if(user == null){
             return new Result(-1,"用户登录失败");
         }else{
-            Order order = orderService.selectOne(new EntityWrapper<Order>().eq("order_id", orderId));
+            Order order = orderService.queryOne(orderId);
             if(order== null){
                 return new Result(-1,"查询订单失败");
             }else{

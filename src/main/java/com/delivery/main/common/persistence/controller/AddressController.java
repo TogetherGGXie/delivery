@@ -50,7 +50,7 @@ public class AddressController {
     }
 
     @ApiOperation("删除地址")
-    @RequestMapping(value = "admin/deleteAddress",method = RequestMethod.POST)
+    @RequestMapping(value = "admin/deleteAddress",method = RequestMethod.DELETE)
     @ResponseBody
     public Result deleteAddress(@RequestParam("address_id") Integer address_id,HttpServletRequest request){
         User user = (User)request.getSession().getAttribute("user");

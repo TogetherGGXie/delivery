@@ -40,7 +40,7 @@ public class RestaurantController {
     }
 
     @ApiOperation("查询店铺信息")
-    @RequestMapping(value = "order/{restaurantId}")
+    @RequestMapping(value = "order/{restaurantId}",method = RequestMethod.GET)
     @ResponseBody
     public Result getReataurant(@PathVariable Integer restaurantId, HttpServletRequest request){
         User user = (User) request.getSession().getAttribute("user");
