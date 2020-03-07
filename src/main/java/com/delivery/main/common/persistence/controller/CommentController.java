@@ -79,8 +79,6 @@ public class CommentController {
                           @RequestParam(name = "orderId") Integer orderId,
                           @RequestParam(name = "comment") String  comment,
                           @RequestParam(name = "orderScore") Integer orderScore,
-                          @RequestParam(name = "deliveryScore") Integer deliveryScore,
-                          @RequestParam(name = "packageScore") Integer packageScore,
                           @RequestParam(name = "picture") String picture,
                               HttpServletRequest request) {
         Result res = new Result();
@@ -103,8 +101,6 @@ public class CommentController {
                 Restaurant restaurant = restaurantService.selectById(restaurantId);
                 Integer commentNum = restaurant.getCommentNumber();
                 restaurant.setOrderScore(restaurant.getOrderScore().multiply(new BigDecimal(commentNum)).add(new BigDecimal(orderScore)).divide(new BigDecimal(commentNum + 1)));
-                restaurant.setDeliveryScore(restaurant.getDeliveryScore().multiply(new BigDecimal(commentNum)).add(new BigDecimal(deliveryScore)).divide(new BigDecimal(commentNum + 1)));
-                restaurant.setPackageScore(restaurant.getPackageScore().multiply(new BigDecimal(commentNum)).add(new BigDecimal(packageScore)).divide(new BigDecimal(commentNum + 1)));
                 restaurant.setCommentNumber(commentNum + 1);
                 Comment co = new Comment();
                 co.setUserId(user.getUserId());
@@ -114,8 +110,6 @@ public class CommentController {
                 co.setComment(comment);
                 co.setCommentTime(new Date());
                 co.setOrderId(orderId);
-                co.setDeliveryScore(deliveryScore);
-                co.setPackageScore(packageScore);
                 co.setOrderScore(orderScore);
                 co.setHasReply(0);
                 co.setPicture(picture);
