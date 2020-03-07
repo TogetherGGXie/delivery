@@ -23,6 +23,7 @@ public interface RestaurantMapper extends BaseMapper<Restaurant> {
     @Select("select * from restaurant order by create_time")
     List<HashMap<String, Object>> getRestaurantList(Pagination pagination);
 
-    @Select("SELECT * from restaurant where (lat between lat-0.0048 and lat+0.0048) and (lng between lng-0.0048 and lng+0.0048)")
+    @Select("SELECT * from restaurant " +
+            "where (lat between lat-0.0048 and lat+0.0048) and (lng between lng-0.0048 and lng+0.0048)")
     List<Restaurant> queryList(String lng,String lat);
 }

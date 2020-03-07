@@ -12,7 +12,10 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
@@ -52,6 +55,7 @@ public class UserController {
     public Map decodeUserInfo(@RequestParam(value = "code") String code,
                               HttpServletRequest request){
         System.out.println(code);
+        Integer statusCode = 0;
         Map map = new HashMap();
         //登录凭证不能为空
         if (code == null || code.length() == 0) {
@@ -135,10 +139,13 @@ public class UserController {
             }
             User user = userService.selectOne(new EntityWrapper<User>().eq("open_id",mapper.get("openid")));;
             if (user == null){
+                statusCode = 201;
                 user = new User();
                 user.setOpenId(mapper.get("openid").toString());
                 user.setCreateTime(DateUtil.date());
                 userService.insert(user);
+            }else {
+                 statusCode = 200;
             }
             request.getSession().setAttribute("user",user);
 //            System.out.println(wxUser.toString());
@@ -147,23 +154,19 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        map.put("status", 200);
+        map.put("status", statusCode);
         return map;
     }
 
     @ApiOperation("设置用户信息")
     @RequestMapping(value = "admin/user_info" ,method = RequestMethod.POST)
     @ResponseBody
-    public Result setUserInfo(@RequestBody HashMap<String, String> userInfoForm, HttpServletRequest request){
+    public Result setUserInfo(@RequestParam User userInfoForm, HttpServletRequest request){
         User user = (User)request.getSession().getAttribute("user");
         if(user == null){
             return new Result(-1,"用户登录已失效");
         }else{
-            String gender =  userInfoForm.get("gender");
-
-            User userInfo = new User();
-            userInfo.setGender(Integer.valueOf(gender));
-            boolean insert = userService.insert(userInfo);
+            boolean insert = userService.insert(userInfoForm);
             if(insert){
                 return new Result(200,"设置用户信息成功");
             }else{
