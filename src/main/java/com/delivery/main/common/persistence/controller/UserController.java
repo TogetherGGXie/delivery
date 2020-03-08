@@ -158,11 +158,19 @@ public class UserController {
     @ApiOperation("设置用户信息")
     @RequestMapping(value = "admin/user_info" ,method = RequestMethod.POST)
     @ResponseBody
-    public Result setUserInfo(@RequestParam User userInfoForm, HttpServletRequest request){
+    public Result setUserInfo(@RequestParam HashMap<String,String> userInfo, HttpServletRequest request){
         User user = (User)request.getSession().getAttribute("user");
         if(user == null){
             return new Result(-1,"用户登录已失效");
         }else{
+            User userInfoForm = new User();
+            userInfoForm.setNickName(userInfo.get("nickName"));
+            userInfoForm.setGender(Integer.valueOf(userInfo.get("gender")));
+            userInfoForm.setLanguage(userInfo.get("language"));
+            userInfoForm.setProvince(userInfo.get("province"));
+            userInfoForm.setCity(userInfo.get("city"));
+            userInfoForm.setCountry(userInfo.get("country"));
+            userInfoForm.setAvatarUrl(userInfo.get("avatarUrl"));
             boolean insert = userService.insert(userInfoForm);
             if(insert){
                 return new Result(200,"设置用户信息成功");

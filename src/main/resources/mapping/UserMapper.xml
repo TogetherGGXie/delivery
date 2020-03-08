@@ -14,6 +14,17 @@
         <result column="current_address_id" property="currentAddressId" />
         <result column="create__time" property="createTime" />
         <result column="status" property="status" />
+        <result column="nickName" property="nickName" />
+        <result column="language" property="language" />
+        <result column="city" property="city" />
+        <result column="province" property="province" />
+        <result column="country" property="country" />
+        <result column="avatarUrl" property="avatarUrl" />
     </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        user_id AS userId, username, phone, password, open_id AS openId, gender, avatar, current_address_id AS currentAddressId, create__time AS createTime, status, nickName, language, city, province, country, avatarUrl
+    </sql>
 
 </mapper>
