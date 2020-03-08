@@ -19,7 +19,9 @@ spring:
       exclude: WEB-INF/**
   freemarker:
     cache: false    #页面不加载缓存，修改即时生效
-
+mybatis-plus:
+  mapper-locations: classpath:mapping/*.xml
+  typeAliasesPackage: com.delivery.main.common.persistence.template.modal
 #  servlet:
 #    multipart:
 #      # 文件传输大小最大值设置

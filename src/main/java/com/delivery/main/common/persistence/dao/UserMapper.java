@@ -1,10 +1,12 @@
 package com.delivery.main.common.persistence.dao;
 
-import com.baomidou.mybatisplus.plugins.Page;
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.delivery.main.common.persistence.template.modal.User;
-import com.baomidou.mybatisplus.mapper.BaseMapper;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.HashMap;
 import java.util.List;
