@@ -58,12 +58,12 @@ public class RestaurantController {
                                  @RequestParam(value = "lng" ,required = false) String lng,
                                  HttpServletRequest request){
         User user = (User) request.getSession().getAttribute("user");
-//        if(user == null ){
-//            return new Result(-1,"登录已过期");
-//        }else {
+        if(user == null ){
+            return new Result(-1,"登录已过期");
+        }else {
             List<Restaurant> restaurants = restaurantService.queryList(lng,lat);
             return new Result(200, "获得店铺信息成功", restaurants);
-//        }
+        }
     }
 
     @ApiOperation("根据关键字搜索餐馆")
