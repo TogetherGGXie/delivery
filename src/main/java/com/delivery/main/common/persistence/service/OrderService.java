@@ -1,5 +1,6 @@
 package com.delivery.main.common.persistence.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
 import com.delivery.main.common.persistence.template.modal.Order;
 
@@ -16,4 +17,5 @@ import java.util.HashMap;
 public interface OrderService extends IService<Order> {
     HashMap<String,Object> queryOrder(Order order);
     Order queryOne(Integer orderId);
+    Page<HashMap<String, Object>> getMyOrders(Page<HashMap<String, Object>> page, Integer restaurantId);
 }

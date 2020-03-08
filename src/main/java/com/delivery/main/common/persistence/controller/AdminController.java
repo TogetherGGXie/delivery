@@ -8,6 +8,7 @@ import com.delivery.main.common.persistence.service.*;
 import com.delivery.main.common.persistence.template.modal.*;
 import io.swagger.annotations.*;
 import io.swagger.models.auth.In;
+import org.aspectj.weaver.ast.Or;
 import org.omg.CORBA.OBJECT_NOT_EXIST;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -182,7 +183,7 @@ public class AdminController {
     @ApiOperation("管理员获取分类列表")
     @RequestMapping(value = "/getCategories/{restaurantId}", method = RequestMethod.GET)
     @ApiImplicitParam(name = "page", value = "{page:1,pageSize:5}")
-    public Result getComments(@PathVariable Integer restaurantId,
+    public Result getCategories(@PathVariable Integer restaurantId,
                               @RequestBody HashMap<String, Object> pager,
                               HttpServletRequest request) {
         Result res = new Result();
@@ -219,7 +220,7 @@ public class AdminController {
     @ApiOperation("店铺管理员添加分类")
     @RequestMapping(value = "/addCategory", method = RequestMethod.POST)
     @ApiImplicitParam(name = "category", value = "{restaurantId:1,name:主食,icon:xxxx}")
-    public Result addFood(@RequestBody Category category,
+    public Result addCategory(@RequestBody Category category,
                           HttpServletRequest request) {
         Result res = new Result();
         Admin admin = (Admin)request.getSession().getAttribute("admin");
@@ -651,7 +652,7 @@ public class AdminController {
     @ApiOperation("店铺管理员修改用户")
     @RequestMapping(value = "/updateUser", method = RequestMethod.POST)
     @ApiImplicitParam(name = "User", value = "{userId:1, phone:1, currentAddressId:1 }")
-    public Result updateFood(@RequestBody User user,
+    public Result updateUser(@RequestBody User user,
                              HttpServletRequest request) {
         Result res = new Result();
         Admin admin = (Admin)request.getSession().getAttribute("admin");
@@ -664,6 +665,35 @@ public class AdminController {
             res.setMessage("权限不足，修改用户失败");
             return res;
         } else {
+            if (userService.updateById(user)) {
+                res.setStatus(200);
+                res.setMessage("修改用户成功");
+                return res;
+            } else {
+                res.setStatus(-1);
+                res.setMessage("修改用户失败");
+                return res;
+            }
+        }
+    }
+
+    @ApiOperation("店铺管理员删除用户")
+    @RequestMapping(value = "/deleteUser", method = RequestMethod.POST)
+    @ApiImplicitParam(name = "User", value = "{userId:1,status:-1}")
+    public Result deleteUser(@RequestBody User user,
+                             HttpServletRequest request) {
+        Result res = new Result();
+        Admin admin = (Admin)request.getSession().getAttribute("admin");
+        if (admin == null) {
+            res.setStatus(-1);
+            res.setMessage("登录状态失效");
+            return res;
+        } else if (admin.getAdminType() == 1) {
+            res.setStatus(-1);
+            res.setMessage("权限不足，修改用户失败");
+            return res;
+        } else {
+            user.setStatus(-1);
             if (userService.updateById(user)) {
                 res.setStatus(200);
                 res.setMessage("修改用户成功");
@@ -714,7 +744,7 @@ public class AdminController {
                                          " deliveryFee:5, minPriceTip:10, businessTIme: , businessTimeStart:" +
                                          " businessTImeEnd: ,notice: ,background: , address: , phone: ," +
                                          " lng: , lat: }")
-    public Result addFood(@RequestBody Restaurant restaurant,
+    public Result addRestaurant(@RequestBody Restaurant restaurant,
                           HttpServletRequest request) {
         Result res = new Result();
         Admin admin = (Admin)request.getSession().getAttribute("admin");
@@ -736,6 +766,9 @@ public class AdminController {
             restaurant.setLastUpdTime(new Date());
             restaurant.setStatus(1);
             if (restaurantService.insert(restaurant)) {
+                admin.setRestaurantId(restaurant.getRestaurantId());
+                adminService.updateById(admin);
+                request.getSession().setAttribute("admin", admin);
                 res.setStatus(200);
                 res.setMessage("添加商铺成功");
                 res.setData(restaurant);
@@ -754,7 +787,7 @@ public class AdminController {
             " deliveryFee:5, minPriceTip:10, businessTIme: , businessTimeStart:" +
             " businessTImeEnd: ,notice: ,background: , address: , phone: ," +
             " lng: , lat: }")
-    public Result updateCategory(@RequestBody Restaurant restaurant,
+    public Result updateRestaurant(@RequestBody Restaurant restaurant,
                                  HttpServletRequest request) {
         Result res = new Result();
         Admin admin = (Admin)request.getSession().getAttribute("admin");
@@ -811,5 +844,72 @@ public class AdminController {
             }
         }
     }
+
+    @ApiOperation("店铺管理员获取本店订单列表")
+    @RequestMapping(value = "/getOrders", method = RequestMethod.GET)
+    @ApiImplicitParam(name = "page", value = "{page:1, pageSize:1, restaurantId:非必须，超管可选}")
+    public Result getMyOrders(@RequestBody HashMap<String, Object> pager,
+                                 HttpServletRequest request) {
+        Result res = new Result();
+        Admin admin = (Admin)request.getSession().getAttribute("admin");
+        if (admin == null) {
+            res.setStatus(-1);
+            res.setMessage("登录状态失效");
+            return res;
+        } else if (admin.getAdminType() == 1 && admin.getRestaurantId() == null) {
+           return new Result(-1, "您未绑定店铺！");
+        } else {
+            Integer page = (Integer) pager.get("page");
+            Integer pageSize = (Integer) pager.get("pageSize");
+            Integer restaurantId = admin.getAdminType() == 1 ? admin.getRestaurantId() : (Integer)pager.get("restaurantId");
+            if(page == null) {
+                page = 1;
+            }
+            if (pageSize == null) {
+                pageSize = 5;
+            }
+            Page<HashMap<String, Object>> p = orderService.getMyOrders(new Page<>(page,pageSize), restaurantId);
+            res.setStatus(200);
+            res.setMessage("获取订单列表成功");
+            res.setData(p);
+            return res;
+        }
+    }
+
+    @ApiOperation("店铺管理员修改订单状态")
+    @RequestMapping(value = "/updateOrder", method = RequestMethod.POST)
+    @ApiImplicitParam(name = "order", value = "{orderId:1, status:1}")
+    public Result updateOrder(@RequestBody Order order,
+                          HttpServletRequest request) {
+        Result res = new Result();
+        Admin admin = (Admin)request.getSession().getAttribute("admin");
+        if (admin == null) {
+            res.setStatus(-1);
+            res.setMessage("登录状态失效");
+            return res;
+        } else if (admin.getAdminType() == 1 && admin.getRestaurantId().equals(null) ) {
+            res.setStatus(-1);
+            res.setMessage("您未绑定店铺");
+            return res;
+        } else if (order.getOrderId() == null) {
+            return new Result(-1, "您未选择订单");
+        } else {
+            Order o = orderService.queryOne(order.getOrderId());
+            if (o == null) {
+                res.setStatus(-1);
+                res.setMessage("订单不存在，修改失败");
+                return res;
+            } else {
+                o.setStatus(order.getStatus());
+                if (orderService.updateById(o)){
+                    return new Result(200, "修改成功");
+                } else {
+                    return new Result(-1, "修改失败");
+                }
+            }
+        }
+    }
+
+
 }
 

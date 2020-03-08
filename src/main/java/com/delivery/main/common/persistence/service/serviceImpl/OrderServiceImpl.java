@@ -1,5 +1,6 @@
 package com.delivery.main.common.persistence.service.serviceImpl;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.delivery.main.common.persistence.dao.OrderMapper;
 import com.delivery.main.common.persistence.dao.RestaurantMapper;
@@ -9,6 +10,8 @@ import com.delivery.main.common.persistence.template.modal.Restaurant;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -50,6 +53,22 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         order.setOrderId(orderId);
         order.setUserId((Integer)(o.get("userId")));
         order.setRestaurantId((Integer)(o.get("restaurantId")));
+        order.setAddress(o.get("address").toString());
+        order.setTotalPrice(new BigDecimal(o.get("totalPrice").toString()));
+        order.setCreateTime((Date)o.get("createTime"));
+        order.setDeliveryFee(new BigDecimal(o.get("deliveryFee").toString()));
+        order.setFoodDetails(o.get("totalPrice").toString());
+        order.setIsPindan((Integer)(o.get("isPindan")));
+        order.setPinOrderId((Integer)(o.get("pinOrderId")));
+        order.setRemarks(o.get("remarks").toString());
+        order.setStatus((Integer)(o.get("status")));
         return order;
+    }
+
+    @Override
+    public Page<HashMap<String, Object>> getMyOrders(Page<HashMap<String, Object>> page, Integer restaurantId) {
+        Page<HashMap<String, Object>> pager = new Page<>(page.getCurrent(),page.getSize());
+        String Rid = restaurantId == null ? "[0-9]*" : restaurantId.toString();
+        return pager.setRecords(orderMapper.getMyOrders(page, Rid));
     }
 }
