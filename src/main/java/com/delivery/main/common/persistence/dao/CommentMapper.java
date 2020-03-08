@@ -38,7 +38,7 @@ public interface CommentMapper extends BaseMapper<Comment> {
             "ORDER BY\n" +
             "\tcomment_time")
     @Results(id="commentLists",value={
-            @Result(property = "userName", column = "user_name"),
+            @Result(property = "username", column = "user_name"),
             @Result(property = "avatar", column = "avatar"),
             @Result(property = "commentTime", column = "comment_time"),
             @Result(property = "comment", column = "comment"),

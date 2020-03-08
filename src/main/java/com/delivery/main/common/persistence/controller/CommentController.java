@@ -85,6 +85,8 @@ public class CommentController {
                           @RequestParam(name = "comment") String  comment,
                           @RequestParam(name = "orderScore") Integer orderScore,
                           @RequestParam(name = "picture") String picture,
+                          @RequestParam(name = "username") String username,
+                          @RequestParam(name = "avatarUrl") String avatarUrl,
                               HttpServletRequest request) {
         Result res = new Result();
         User user = (User)request.getSession().getAttribute("user");
@@ -119,8 +121,8 @@ public class CommentController {
                 restaurant.setCommentNumber(commentNum + 1);
                 Comment co = new Comment();
                 co.setUserId(user.getUserId());
-                co.setAvatar(user.getAvatar());
-                co.setUserName(user.getUsername());
+                co.setAvatar(avatarUrl);
+                co.setUserName(username);
                 co.setRestaurantId(restaurantId);
                 co.setComment(comment);
                 co.setCommentTime(new Date());
