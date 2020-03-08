@@ -36,7 +36,7 @@
     </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        restaurantId, user_id AS userId, name, picture, month_sales AS monthSales, month_sales_tip AS monthSalesTip, order_score AS orderScore, delivery_score AS deliveryScore, package_score AS packageScore, distance, delivery_time AS deliveryTime, delivery_fee AS deliveryFee, min_price_tip AS minPriceTip, average_price_tip AS averagePriceTip, third_category AS thirdCategory, business_time AS businessTime, business_time_start AS businessTimeStart, business_time_end AS businessTimeEnd, avg_delivery_time AS avgDeliveryTime, notice, background, comment_number AS commentNumber, address, phone, lng, lat, create_time AS createTime, last_upd_time AS lastUpdTime, status
+       restaurant_id AS restaurantId, user_id AS userId, name, picture, month_sales AS monthSales, month_sales_tip AS monthSalesTip, order_score AS orderScore, delivery_score AS deliveryScore, package_score AS packageScore, distance, delivery_time AS deliveryTime, delivery_fee AS deliveryFee, min_price_tip AS minPriceTip, average_price_tip AS averagePriceTip, third_category AS thirdCategory, business_time AS businessTime, business_time_start AS businessTimeStart, business_time_end AS businessTimeEnd, avg_delivery_time AS avgDeliveryTime, notice, background, comment_number AS commentNumber, address, phone, lng, lat, create_time AS createTime, last_upd_time AS lastUpdTime, status
     </sql>
 
     <select id="queryList" parameterType="java.lang.String" resultType="com.delivery.main.common.persistence.template.modal.Restaurant">
