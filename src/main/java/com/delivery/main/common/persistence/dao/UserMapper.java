@@ -31,11 +31,11 @@ public interface UserMapper extends BaseMapper<User> {
             "\tgender,\n" +
             "\tavatar,\n" +
             "\tcreate__time,\n" +
-            "\tstatus,\n" +
+            "\tstatus\n" +
             "FROM\n" +
             "\t`user`\n" +
             "\tORDER BY\n" +
-            "\tcreate_time")
+            "\tcreate__time")
     @Results(id="UserListResultMap",value={
             @Result(property = "userId", column = "user_id"),
             @Result(property = "username", column = "username"),
