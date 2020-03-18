@@ -72,8 +72,23 @@ public class LocationController {
             System.out.println(entry+"========");
             Object title = entry.get("name");
             Object address = entry.get("address");
-            hashMap.put("title",title);
-            hashMap.put("address",address);
+            String newAddress = title.toString();
+            String lngLat = getLngLat(newAddress);
+            if("".equals(lngLat) ||lngLat == null){
+                String lng = null;
+                String lat = null;
+                hashMap.put("lng",lng);
+                hashMap.put("lat",lat);
+                hashMap.put("title",title);
+                hashMap.put("address",address);
+            }else {
+                String lng = lngLat.substring(0,lngLat.indexOf(","));
+                String lat = lngLat.substring(lngLat.indexOf(",")+1);
+                hashMap.put("lng",lng);
+                hashMap.put("lat",lat);
+                hashMap.put("title",title);
+                hashMap.put("address",address);
+            }
             list.add(hashMap);
         }
 
@@ -204,10 +219,10 @@ public class LocationController {
     }
 
 
-    @ApiOperation("根据地址获取经纬度")
-    @ResponseBody
-    @RequestMapping(value = "detailLocations" ,method = RequestMethod.POST)
-    public String getLngLat(@RequestParam(value = "address",required = false) String address) {
+//    @ApiOperation("根据地址获取经纬度")
+//    @ResponseBody
+//    @RequestMapping(value = "getLatByAddress" ,method = RequestMethod.POST)
+    public String getLngLat(String address) {
         StringBuffer json = new StringBuffer();
         try {
             URL u = new URL("http://restapi.amap.com/v3/geocode/geo?address="+address+"&output=JSON&key=7f4ffae4074e8b8e4d147190527a4b72");
@@ -226,7 +241,9 @@ public class LocationController {
         JSONObject jsonObject = JSONObject.fromObject(jsonStr);
 
         if(jsonObject.getJSONArray("geocodes").size()>0) {
-            return jsonObject.getJSONArray("geocodes").getJSONObject(0).get("location").toString();
+            System.out.println(jsonObject.getJSONArray("geocodes").getJSONObject(0));
+            String latAndLng = jsonObject.getJSONArray("geocodes").getJSONObject(0).get("location").toString();
+            return latAndLng;
         } else {
             return null;
         }
