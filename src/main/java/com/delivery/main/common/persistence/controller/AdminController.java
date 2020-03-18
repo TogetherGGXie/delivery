@@ -2,15 +2,18 @@ package com.delivery.main.common.persistence.controller;
 
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.delivery.main.common.persistence.service.*;
 import com.delivery.main.common.persistence.template.modal.*;
+import com.qiniu.util.Auth;
 import io.swagger.annotations.*;
 import io.swagger.models.auth.In;
 import org.aspectj.weaver.ast.Or;
 import org.omg.CORBA.OBJECT_NOT_EXIST;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
@@ -59,6 +62,14 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
+    @Value("${qiniu.accessKey}")
+    private String accessKey;
+
+    @Value("${qiniu.secretKey}")
+    private String secretKey;
+
+    @Value("${qiniu.bucket}")
+    private String bucket;
 
     @ApiOperation("管理员登录")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -909,6 +920,23 @@ public class AdminController {
             }
         }
     }
+
+
+    @RequestMapping(value = "/getToken", method = RequestMethod.GET)
+    @ApiOperation("获取上传token")
+    public Result getToken(HttpServletRequest request) {
+        Admin admin = (Admin)request.getSession().getAttribute("admin");
+        if (admin == null) {
+            return new Result(-1, "登录状态失效");
+        }
+        Auth auth = Auth.create(accessKey, secretKey);
+        HashMap<String, String> object = new HashMap<>();
+        object.put("token", auth.uploadToken(bucket));
+        object.put("uuid", IdUtil.simpleUUID());
+
+        return new Result(200, "获取token成功", object);
+    }
+
 
 
 }

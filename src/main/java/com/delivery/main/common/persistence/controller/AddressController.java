@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,14 +31,25 @@ public class AddressController {
     @ApiOperation("添加地址")
     @RequestMapping(value = "admin/address", method= RequestMethod.POST)
     @ResponseBody
-    public Result addAddress(@RequestParam HashMap<String,String> data, HttpServletRequest request){
+    public Result addAddress(@RequestParam String gender,
+                             @RequestParam String name,
+                             @RequestParam String phone,
+                             @RequestParam HashMap<String, String> addressInfo,
+                             HttpServletRequest request){
         User user = (User)request.getSession().getAttribute("user");
         if(user == null){
             return new Result(-1,"登录状态失效");
         }else{
-            String phone = data.get("phone");
             Address address = new Address();
             address.setPhone(phone);
+            address.setUserId(user.getUserId());
+            address.setName(name);
+            address.setGender(gender.equals("female") ? 0 : 1);
+            address.setProvince(addressInfo.get("province"));
+            address.setCity(addressInfo.get("city"));
+            address.setDistrict(addressInfo.get("district"));
+            address.setDetail(addressInfo.get("detail"));
+            address.setCreateTime(new Date());
             boolean insertAddress = addressService.insert(address);
             if(insertAddress){
                 return new Result(200,"添加收货地址成功");

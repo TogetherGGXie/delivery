@@ -1,6 +1,5 @@
 package com.delivery.main.common.persistence.controller;
 
-
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -9,18 +8,37 @@ import com.delivery.main.common.persistence.template.modal.User;
 import com.delivery.main.util.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
+
+import java.security.*;
+
+import org.codehaus.xfire.util.Base64;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.AlgorithmParameters;
+import java.security.NoSuchProviderException;
+import java.security.Security;
+import java.security.spec.InvalidParameterSpecException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,8 +68,9 @@ public class UserController {
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public Map decodeUserInfo(@RequestParam(value = "code") String code,
+                              @RequestParam(value = "encryptedData") String encryptedData,
+                              @RequestParam(value = "iv") String iv,
                               HttpServletRequest request){
-        System.out.println(code);
         Integer statusCode = 0;
         Map map = new HashMap();
         //登录凭证不能为空
@@ -144,9 +163,9 @@ public class UserController {
             }else {
                  statusCode = 200;
             }
+            user = this.updateUser(mapper.get("session_key").toString(), encryptedData, iv, user);
+            userService.updateById(user);
             request.getSession().setAttribute("user",user);
-//            System.out.println(wxUser.toString());
-//            System.out.println("session ="+request.getSession().getAttribute("user"));
             map.put("sessionId",request.getSession().getId());
         } catch (Exception e) {
             e.printStackTrace();
@@ -179,5 +198,65 @@ public class UserController {
             }
         }
     }
+
+
+
+    private User updateUser(String sessionKey, String encryptedData, String iv, User user) {
+        // 被加密的数据
+        byte[] dataByte = Base64.decode(encryptedData);
+        // 加密秘钥
+        byte[] keyByte = Base64.decode(sessionKey);
+        // 偏移量
+        byte[] ivByte = Base64.decode(iv);
+        try {
+            // 如果密钥不足16位，那么就补足.  这个if 中的内容很重要
+            int base = 16;
+            if (keyByte.length % base != 0) {
+                int groups = keyByte.length / base + (keyByte.length % base != 0 ? 1 : 0);
+                byte[] temp = new byte[groups * base];
+                Arrays.fill(temp, (byte) 0);
+                System.arraycopy(keyByte, 0, temp, 0, keyByte.length);
+                keyByte = temp;
+            }
+            // 初始化
+            Security.addProvider(new BouncyCastleProvider());
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding","BC");
+            SecretKeySpec spec = new SecretKeySpec(keyByte, "AES");
+            AlgorithmParameters parameters = AlgorithmParameters.getInstance("AES");
+            parameters.init(new IvParameterSpec(ivByte));
+            cipher.init(Cipher.DECRYPT_MODE, spec, parameters);// 初始化
+            byte[] resultByte = cipher.doFinal(dataByte);
+            if (null != resultByte && resultByte.length > 0) {
+                String result = new String(resultByte, "UTF-8");
+                JSONObject jsonObject = JSONObject.parseObject(result);
+                user.setGender((Integer) jsonObject.get("gender"));
+                user.setAvatarUrl(jsonObject.get("avatarUrl").toString());
+                user.setNickName(jsonObject.get("nickName").toString());
+                user.setLanguage(jsonObject.get("language").toString());
+                return user;
+            }
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidParameterSpecException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
 }
 
