@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.delivery.main.common.persistence.dao.PindanMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.delivery.main.common.persistence.template.modal.Pindan">
+        <id column="id" property="id" />
+        <result column="pinId" property="pinId" />
+        <result column="restaurantId" property="restaurantId" />
+        <result column="username" property="username" />
+        <result column="User_icon" property="userIcon" />
+        <result column="groupStatus" property="groupStatus" />
+        <result column="status" property="status" />
+        <result column="other" property="other" />
+    </resultMap>
+    <!--<insert id="insertPindan" parameterType="com.delivery.main.common.persistence.template.modal.Pindan" resultType="java.lang.Integer">-->
+
+    <!--</insert>-->
+</mapper>

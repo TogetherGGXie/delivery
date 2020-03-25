@@ -9,11 +9,14 @@ import com.delivery.main.util.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.codehaus.xfire.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -21,22 +24,11 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
-
-import java.security.*;
-
-import org.codehaus.xfire.util.Base64;
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.AlgorithmParameters;
-import java.security.NoSuchProviderException;
-import java.security.Security;
+import java.security.*;
 import java.security.spec.InvalidParameterSpecException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -153,7 +145,7 @@ public class UserController {
                 map.put("status", -1);
                 return map;
             }
-            User user = userService.selectOne(new EntityWrapper<User>().eq("open_id",mapper.get("openid")));;
+            User user = userService.selectOne(new EntityWrapper<User>().eq("open_id",mapper.get("openid")));
             if (user == null){
                 statusCode = 201;
                 user = new User();
@@ -182,16 +174,15 @@ public class UserController {
         if(user == null){
             return new Result(-1,"用户登录已失效");
         }else{
-            User userInfoForm = new User();
-            userInfoForm.setNickName(userInfo.get("nickName"));
-            userInfoForm.setGender(Integer.valueOf(userInfo.get("gender")));
-            userInfoForm.setLanguage(userInfo.get("language"));
-            userInfoForm.setProvince(userInfo.get("province"));
-            userInfoForm.setCity(userInfo.get("city"));
-            userInfoForm.setCountry(userInfo.get("country"));
-            userInfoForm.setAvatarUrl(userInfo.get("avatarUrl"));
-            boolean insert = userService.insert(userInfoForm);
-            if(insert){
+            user.setNickName(userInfo.get("nickName"));
+            user.setGender(Integer.valueOf(userInfo.get("gender")));
+            user.setLanguage(userInfo.get("language"));
+            user.setProvince(userInfo.get("province"));
+            user.setCity(userInfo.get("city"));
+            user.setCountry(userInfo.get("country"));
+            user.setAvatarUrl(userInfo.get("avatarUrl"));
+            boolean update = userService.updateById(user);
+            if(update){
                 return new Result(200,"设置用户信息成功");
             }else{
                 return new Result(-1,"设置用户信息失败");
