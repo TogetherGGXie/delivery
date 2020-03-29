@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -40,7 +39,7 @@ public class PindanController {
             List<HashMap<String,Object>> pinIdList = new LinkedList<>();
             for (Pindan i:pindanList){
                 String pinId = i.getPinId();
-                Date time = i.getTime();
+                String time = i.getTime();
                 HashMap<String,Object> hashMap= new HashMap<>();
                 hashMap.put("pinId",pinId);
                 hashMap.put("time",time);
@@ -120,7 +119,7 @@ public class PindanController {
     @RequestMapping(value = "/assemble/buildAssemble", method = RequestMethod.POST)
     @ResponseBody
     public Result buildAssemble(@RequestParam Integer restaurantId,
-                              @RequestParam Date time,
+                              @RequestParam String time,
                               @RequestParam String pinId,
                               @RequestParam String name,
                               @RequestParam String user_icon,
@@ -130,10 +129,10 @@ public class PindanController {
             return new Result(-1, "用户登录已失效");
         } else {
             Integer userId = user.getUserId();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat();//注意月份是MM
-
-            Pindan pd = new Pindan();
-            String pinIdNew = String.valueOf(restaurantId) + userId + simpleDateFormat.format(time);
+        System.out.println(time);
+        String newTime = time.replaceAll("/", "").replaceAll(" ", "").replaceAll(":", "");
+        Pindan pd = new Pindan();
+            String pinIdNew = String.valueOf(restaurantId)  + newTime;
             pd.setRestaurantId(restaurantId);
             pd.setPinId(pinIdNew);
             pd.setStatus("0");
@@ -160,7 +159,7 @@ public class PindanController {
     @ResponseBody
     public Result joinAssemble(@RequestParam Integer restaurantId,
                               @RequestParam String pinId,
-                              @RequestParam Date time,
+                              @RequestParam String time,
                               @RequestParam HashMap<String, String> userInfo,
                               HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("user");

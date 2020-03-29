@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * <p>
@@ -39,17 +38,14 @@ public class Pindan implements Serializable {
     @TableField("User_icon")
     private String userIcon;
     private String groupStatus;
-    private Date time;
+    private String time;
 
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
-    }
 
     private String status;
+
+    public String getTime() {
+        return time;
+    }
 
     @Override
     public String toString() {
@@ -135,4 +131,6 @@ public class Pindan implements Serializable {
         this.other = other;
     }
 
+    public void setTime(String time) {
+    }
 }
