@@ -24,48 +24,18 @@ public class Pindan implements Serializable {
     private Integer id;
     private String pinId;
     private Integer restaurantId;
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
     private Integer userId;
     private String username;
     @TableField("User_icon")
     private String userIcon;
     private String groupStatus;
     private String time;
-
-
     private String status;
-
-    public String getTime() {
-        return time;
-    }
-
-    @Override
-    public String toString() {
-        return "Pindan{" +
-                "id=" + id +
-                ", pinId='" + pinId + '\'' +
-                ", restaurantId=" + restaurantId +
-                ", userId=" + userId +
-                ", username='" + username + '\'' +
-                ", userIcon='" + userIcon + '\'' +
-                ", groupStatus='" + groupStatus + '\'' +
-                ", status='" + status + '\'' +
-                ", time=" + time +
-                ", other='" + other + '\'' +
-                '}';
-    }
-
-
     private String other;
 
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
     public Integer getId() {
         return id;
@@ -89,6 +59,14 @@ public class Pindan implements Serializable {
 
     public void setRestaurantId(Integer restaurantId) {
         this.restaurantId = restaurantId;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -115,6 +93,14 @@ public class Pindan implements Serializable {
         this.groupStatus = groupStatus;
     }
 
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -131,6 +117,19 @@ public class Pindan implements Serializable {
         this.other = other;
     }
 
-    public void setTime(String time) {
+    @Override
+    public String toString() {
+        return "Pindan{" +
+                "id=" + id +
+                ", pinId='" + pinId + '\'' +
+                ", restaurantId=" + restaurantId +
+                ", userId=" + userId +
+                ", username='" + username + '\'' +
+                ", userIcon='" + userIcon + '\'' +
+                ", groupStatus='" + groupStatus + '\'' +
+                ", time='" + time + '\'' +
+                ", status='" + status + '\'' +
+                ", other='" + other + '\'' +
+                '}';
     }
 }

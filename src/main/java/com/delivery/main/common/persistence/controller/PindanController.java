@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -129,13 +130,16 @@ public class PindanController {
             return new Result(-1, "用户登录已失效");
         } else {
             Integer userId = user.getUserId();
-        System.out.println(time);
-        String newTime = time.replaceAll("/", "").replaceAll(" ", "").replaceAll(":", "");
-        Pindan pd = new Pindan();
-            String pinIdNew = String.valueOf(restaurantId)  + newTime;
+            System.out.println(time);
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String pinIdTime = df.format(new Date());
+            String newTime = pinIdTime.replaceAll("-", "").replaceAll(" ", "").replaceAll(":", "");
+            Pindan pd = new Pindan();
+            String pinIdNew = String.valueOf(restaurantId) +userId + newTime;
             pd.setRestaurantId(restaurantId);
             pd.setPinId(pinIdNew);
             pd.setStatus("0");
+            pd.setGroupStatus("0");
             pd.setTime(time);
             pd.setUserIcon(user_icon);
             pd.setUsername(name);
