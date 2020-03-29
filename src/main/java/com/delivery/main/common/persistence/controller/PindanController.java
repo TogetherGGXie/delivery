@@ -74,6 +74,8 @@ public class PindanController {
 
     public HashMap getUserGroup(){
         HashMap<String,List> hashMap = new HashMap<>();
+        List<Pindan> list = new LinkedList<>();
+        hashMap.put("resPinList",list);
         return hashMap;
     }
 
