@@ -63,8 +63,8 @@ public class PindanController {
             HashMap<String,List> pindanMap = new HashMap<>();
             pindanMap.put("resPinList",resPinList);
             List<HashMap<String,List>> pindans = new LinkedList<>();
-            HashMap userGroup = getUserGroup();
-            HashMap UserBuildAssembleList = getUserBuildAssemble(uId);
+            HashMap userGroup = getUserGroup(id,uId);
+            HashMap UserBuildAssembleList = getUserBuildAssemble(id,uId);
             pindans.add(pindanMap);
             pindans.add(userGroup);
             pindans.add(UserBuildAssembleList);
@@ -72,20 +72,40 @@ public class PindanController {
         }
     }
 
-    public HashMap getUserGroup(){
-        HashMap<String,List> hashMap = new HashMap<>();
-        List<Pindan> list = new LinkedList<>();
-        hashMap.put("resPinList",list);
-        return hashMap;
+    public HashMap getUserGroup(Integer id,Integer uId){
+        List<HashMap<String,Object>> pinList = new LinkedList<>();
+        List<Pindan> listByPinId = pindanService.selectList(new EntityWrapper<Pindan>().eq("restaurantId", id).eq("userId", String.valueOf(uId)).eq("other","1"));
+        for(Pindan i : listByPinId){
+            String pinId = i.getPinId();
+            String time = i.getTime();
+            List<Pindan> list = pindanService.selectList(new EntityWrapper<Pindan>().eq("pinId", pinId));
+            HashMap<String,Object> hashMap = new HashMap<>();
+            hashMap.put("groupPinList",list);
+            hashMap.put("time",time);
+            hashMap.put("pinId",pinId);
+            pinList.add(hashMap);
+        }
+        HashMap<String,List> listHashMap = new HashMap<>();
+        listHashMap.put("resPinList",pinList);
+        return listHashMap;
     }
 
-    public HashMap getUserBuildAssemble(Integer uId){
-        HashMap<String,List> hashMap = new HashMap<>();
-        List<Pindan> listByPinId = pindanService.selectList(new EntityWrapper<Pindan>().like("pinId", String.valueOf(uId)));
-        hashMap.put("resPinList",listByPinId);
-        Object object = new Object();
-
-        return hashMap;
+    public HashMap getUserBuildAssemble(Integer id,Integer uId){
+        List<HashMap<String,Object>> pinList = new LinkedList<>();
+        List<Pindan> listByPinId = pindanService.selectList(new EntityWrapper<Pindan>().eq("restaurantId", id).eq("userId", String.valueOf(uId)).eq("other","0"));
+        for(Pindan i : listByPinId){
+            String pinId = i.getPinId();
+            String time = i.getTime();
+            List<Pindan> list = pindanService.selectList(new EntityWrapper<Pindan>().eq("pinId", pinId));
+            HashMap<String,Object> hashMap = new HashMap<>();
+            hashMap.put("groupPinList",list);
+            hashMap.put("time",time);
+            hashMap.put("pinId",pinId);
+            pinList.add(hashMap);
+        }
+        HashMap<String,List> listHashMap = new HashMap<>();
+        listHashMap.put("resPinList",pinList);
+        return listHashMap;
     }
 
 
@@ -142,6 +162,7 @@ public class PindanController {
             pd.setPinId(pinIdNew);
             pd.setStatus("0");
             pd.setGroupStatus("0");
+            pd.setOther("0");
             pd.setTime(time);
             pd.setUserIcon(user_icon);
             pd.setUsername(name);
@@ -172,6 +193,7 @@ public class PindanController {
         if (user == null) {
             return new Result(-1, "用户登录已失效");
         } else {
+            Integer userId = user.getUserId();
             String userName = userInfo.get("name");
             String userIcon = userInfo.get("user_icon");
             Pindan pd = new Pindan();
@@ -180,6 +202,8 @@ public class PindanController {
             pd.setUsername(userName);
             pd.setPinId(pinId);
             pd.setTime(time);
+            pd.setOther("1");
+            pd.setUserId(userId);
             pindanService.insert(pd);
             Integer id = pd.getId();
             List<Pindan> pindanList = pindanService.selectList(new EntityWrapper<Pindan>().eq("pinId", pinId));
