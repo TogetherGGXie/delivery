@@ -52,7 +52,7 @@ public class PindanController {
             List<HashMap<String,Object>> resPinList = new LinkedList<>();
             for(HashMap<String,Object> i:pinIdList){
                 String pinId = String.valueOf(i.get("pinId"));
-                Date time = (Date) i.get("time");
+                String time = String.valueOf(i.get("time"));
                 List<Pindan> groupPinList = pindanService.selectList(new EntityWrapper<Pindan>().eq("pinId", pinId));
                 HashMap<String,Object> hashMap = new HashMap<>();
                 hashMap.put("time",time);
