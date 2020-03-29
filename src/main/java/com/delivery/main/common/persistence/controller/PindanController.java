@@ -80,7 +80,7 @@ public class PindanController {
     public HashMap getUserBuildAssemble(Integer uId){
         HashMap<String,List> hashMap = new HashMap<>();
         List<Pindan> listByPinId = pindanService.selectList(new EntityWrapper<Pindan>().like("pinId", String.valueOf(uId)));
-        hashMap.put("UserBuildAssembleList",listByPinId);
+        hashMap.put("resPinList",listByPinId);
         Object object = new Object();
 
         return hashMap;
@@ -135,7 +135,7 @@ public class PindanController {
             String pinIdTime = df.format(new Date());
             String newTime = pinIdTime.replaceAll("-", "").replaceAll(" ", "").replaceAll(":", "");
             Pindan pd = new Pindan();
-            String pinIdNew = String.valueOf(restaurantId) +userId + newTime;
+            String pinIdNew = String.valueOf(restaurantId) +String.valueOf(userId) + newTime;
             pd.setRestaurantId(restaurantId);
             pd.setPinId(pinIdNew);
             pd.setStatus("0");
