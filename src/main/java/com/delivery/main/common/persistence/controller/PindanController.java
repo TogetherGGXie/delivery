@@ -120,7 +120,10 @@ public class PindanController {
     @RequestMapping(value = "/assemble/buildAssemble", method = RequestMethod.POST)
     @ResponseBody
     public Result buildAssemble(@RequestParam Integer restaurantId,
-                              @RequestParam HashMap<String, String> buildPinlist,
+                              @RequestParam Date time,
+                              @RequestParam String pinId,
+                              @RequestParam String name,
+                              @RequestParam String user_icon,
                               HttpServletRequest request) throws ParseException {
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
@@ -128,19 +131,15 @@ public class PindanController {
         } else {
             Integer userId = user.getUserId();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat();//注意月份是MM
-            Date time = simpleDateFormat.parse(buildPinlist.get("time")) ;
-            String userName = buildPinlist.get("name");
-            String userIcon = buildPinlist.get("user_icon");
-            StringBuilder pinId = new StringBuilder();
-            pinId.append(restaurantId).append(userId).append(time);
+
             Pindan pd = new Pindan();
-            String pinIdNew = pinId.toString();
+            String pinIdNew = String.valueOf(restaurantId) + userId + simpleDateFormat.format(time);
             pd.setRestaurantId(restaurantId);
             pd.setPinId(pinIdNew);
             pd.setStatus("0");
             pd.setTime(time);
-            pd.setUserIcon(userIcon);
-            pd.setUsername(userName);
+            pd.setUserIcon(user_icon);
+            pd.setUsername(name);
             pd.setUserId(userId);
             boolean insertPd = pindanService.insert(pd);
             if (insertPd) {
