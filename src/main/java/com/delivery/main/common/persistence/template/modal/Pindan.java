@@ -1,10 +1,12 @@
 package com.delivery.main.common.persistence.template.modal;
 
-import com.baomidou.mybatisplus.enums.IdType;
-import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -24,21 +26,6 @@ public class Pindan implements Serializable {
     private String pinId;
     private Integer restaurantId;
 
-    @Override
-    public String toString() {
-        return "Pindan{" +
-                "id=" + id +
-                ", pinId='" + pinId + '\'' +
-                ", restaurantId=" + restaurantId +
-                ", userId=" + userId +
-                ", username='" + username + '\'' +
-                ", userIcon='" + userIcon + '\'' +
-                ", groupStatus='" + groupStatus + '\'' +
-                ", status='" + status + '\'' +
-                ", other='" + other + '\'' +
-                '}';
-    }
-
     public Integer getUserId() {
         return userId;
     }
@@ -52,7 +39,35 @@ public class Pindan implements Serializable {
     @TableField("User_icon")
     private String userIcon;
     private String groupStatus;
+    private Date time;
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
     private String status;
+
+    @Override
+    public String toString() {
+        return "Pindan{" +
+                "id=" + id +
+                ", pinId='" + pinId + '\'' +
+                ", restaurantId=" + restaurantId +
+                ", userId=" + userId +
+                ", username='" + username + '\'' +
+                ", userIcon='" + userIcon + '\'' +
+                ", groupStatus='" + groupStatus + '\'' +
+                ", status='" + status + '\'' +
+                ", time=" + time +
+                ", other='" + other + '\'' +
+                '}';
+    }
+
+
     private String other;
 
 

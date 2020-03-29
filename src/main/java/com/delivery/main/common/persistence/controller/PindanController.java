@@ -11,10 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * <p>
@@ -32,26 +31,32 @@ public class PindanController {
     @RequestMapping(value = "/assemble/allAssemble/{id}", method= RequestMethod.GET)
     @ResponseBody
     public Result queryOrders(@PathVariable Integer id ,HttpServletRequest request){
-//        User user = (User) request.getSession().getAttribute("user");
-//        if (user == null) {
-//            return new Result(-1, "用户登录已失效");
-//        } else {
-//            Integer uId = user.getUserId();
+        User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {
+            return new Result(-1, "用户登录已失效");
+        } else {
+            Integer uId = user.getUserId();
             List<Pindan> pindanList = pindanService.selectList(new EntityWrapper<Pindan>().eq("restaurantId", id));
-            List<String> pinIdList =new LinkedList<String>();
+            List<HashMap<String,Object>> pinIdList = new LinkedList<>();
             for (Pindan i:pindanList){
                 String pinId = i.getPinId();
-                pinIdList.add(pinId);
+                Date time = i.getTime();
+                HashMap<String,Object> hashMap= new HashMap<>();
+                hashMap.put("pinId",pinId);
+                hashMap.put("time",time);
+                pinIdList.add(hashMap);
             }
             HashSet hashSet = new HashSet(pinIdList);
             pinIdList.clear();
             pinIdList.addAll(hashSet);
             List<HashMap<String,Object>> resPinList = new LinkedList<>();
-            for(String i:pinIdList){
-                List<Pindan> groupPinList = pindanService.selectList(new EntityWrapper<Pindan>().eq("pinId", i));
+            for(HashMap<String,Object> i:pinIdList){
+                String pinId = String.valueOf(i.get("pinId"));
+                Date time = (Date) i.get("time");
+                List<Pindan> groupPinList = pindanService.selectList(new EntityWrapper<Pindan>().eq("pinId", pinId));
                 HashMap<String,Object> hashMap = new HashMap<>();
-                hashMap.put("time","time");
-                hashMap.put("pinId",i);
+                hashMap.put("time",time);
+                hashMap.put("pinId",pinId);
                 hashMap.put("groupPinList",groupPinList);
                 resPinList.add(hashMap);
             }
@@ -59,12 +64,12 @@ public class PindanController {
             pindanMap.put("resPinList",resPinList);
             List<HashMap<String,List>> pindans = new LinkedList<>();
             HashMap userGroup = getUserGroup();
-//            HashMap UserBuildAssembleList = getUserBuildAssemble(uId);
+            HashMap UserBuildAssembleList = getUserBuildAssemble(uId);
             pindans.add(pindanMap);
             pindans.add(userGroup);
-//            pindans.add(UserBuildAssembleList);
+            pindans.add(UserBuildAssembleList);
             return new Result(200,"获取列表成功",pindans);
-//        }
+        }
     }
 
     public HashMap getUserGroup(){
@@ -116,13 +121,14 @@ public class PindanController {
     @ResponseBody
     public Result buildAssemble(@RequestParam Integer restaurantId,
                               @RequestParam HashMap<String, String> buildPinlist,
-                              HttpServletRequest request) {
+                              HttpServletRequest request) throws ParseException {
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
             return new Result(-1, "用户登录已失效");
         } else {
             Integer userId = user.getUserId();
-            String time = buildPinlist.get("time");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat();//注意月份是MM
+            Date time = simpleDateFormat.parse(buildPinlist.get("time")) ;
             String userName = buildPinlist.get("name");
             String userIcon = buildPinlist.get("user_icon");
             StringBuilder pinId = new StringBuilder();
@@ -131,8 +137,11 @@ public class PindanController {
             String pinIdNew = pinId.toString();
             pd.setRestaurantId(restaurantId);
             pd.setPinId(pinIdNew);
+            pd.setStatus("0");
+            pd.setTime(time);
             pd.setUserIcon(userIcon);
             pd.setUsername(userName);
+            pd.setUserId(userId);
             boolean insertPd = pindanService.insert(pd);
             if (insertPd) {
                 Pindan pinId1 = pindanService.selectOne(new EntityWrapper<Pindan>().eq("pinId", pinIdNew));
@@ -152,6 +161,7 @@ public class PindanController {
     @ResponseBody
     public Result joinAssemble(@RequestParam Integer restaurantId,
                               @RequestParam String pinId,
+                              @RequestParam Date time,
                               @RequestParam HashMap<String, String> userInfo,
                               HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("user");
@@ -165,10 +175,10 @@ public class PindanController {
             pd.setUserIcon(userIcon);
             pd.setUsername(userName);
             pd.setPinId(pinId);
+            pd.setTime(time);
             pindanService.insert(pd);
             Integer id = pd.getId();
             List<Pindan> pindanList = pindanService.selectList(new EntityWrapper<Pindan>().eq("pinId", pinId));
-
             if (pindanList.size() == 6) {
                 for (Pindan i : pindanList) {
                     i.setGroupStatus("1");
