@@ -23,6 +23,31 @@ public class Pindan implements Serializable {
     private Integer id;
     private String pinId;
     private Integer restaurantId;
+
+    @Override
+    public String toString() {
+        return "Pindan{" +
+                "id=" + id +
+                ", pinId='" + pinId + '\'' +
+                ", restaurantId=" + restaurantId +
+                ", userId=" + userId +
+                ", username='" + username + '\'' +
+                ", userIcon='" + userIcon + '\'' +
+                ", groupStatus='" + groupStatus + '\'' +
+                ", status='" + status + '\'' +
+                ", other='" + other + '\'' +
+                '}';
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    private Integer userId;
     private String username;
     @TableField("User_icon")
     private String userIcon;
@@ -95,17 +120,4 @@ public class Pindan implements Serializable {
         this.other = other;
     }
 
-    @Override
-    public String toString() {
-        return "Pindan{" +
-        ", id=" + id +
-        ", pinId=" + pinId +
-        ", restaurantId=" + restaurantId +
-        ", username=" + username +
-        ", userIcon=" + userIcon +
-        ", groupStatus=" + groupStatus +
-        ", status=" + status +
-        ", other=" + other +
-        "}";
-    }
 }

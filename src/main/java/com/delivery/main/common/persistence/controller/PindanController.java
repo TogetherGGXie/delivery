@@ -32,11 +32,11 @@ public class PindanController {
     @RequestMapping(value = "/assemble/allAssemble/{id}", method= RequestMethod.GET)
     @ResponseBody
     public Result queryOrders(@PathVariable Integer id ,HttpServletRequest request){
-        User user = (User) request.getSession().getAttribute("user");
-        if (user == null) {
-            return new Result(-1, "用户登录已失效");
-        } else {
-            Integer uId = user.getUserId();
+//        User user = (User) request.getSession().getAttribute("user");
+//        if (user == null) {
+//            return new Result(-1, "用户登录已失效");
+//        } else {
+//            Integer uId = user.getUserId();
             List<Pindan> pindanList = pindanService.selectList(new EntityWrapper<Pindan>().eq("restaurantId", id));
             List<String> pinIdList =new LinkedList<String>();
             for (Pindan i:pindanList){
@@ -44,15 +44,14 @@ public class PindanController {
                 pinIdList.add(pinId);
             }
             HashSet hashSet = new HashSet(pinIdList);
-            pindanList.clear();
-            pindanList.addAll(hashSet);
+            pinIdList.clear();
+            pinIdList.addAll(hashSet);
             List<HashMap<String,Object>> resPinList = new LinkedList<>();
-            for(Pindan i:pindanList){
-                String pinId = i.getPinId();
-                List<Pindan> groupPinList = pindanService.selectList(new EntityWrapper<Pindan>().eq("pinId", pinId));
+            for(String i:pinIdList){
+                List<Pindan> groupPinList = pindanService.selectList(new EntityWrapper<Pindan>().eq("pinId", i));
                 HashMap<String,Object> hashMap = new HashMap<>();
                 hashMap.put("time","time");
-                hashMap.put("pinId",pinId);
+                hashMap.put("pinId",i);
                 hashMap.put("groupPinList",groupPinList);
                 resPinList.add(hashMap);
             }
@@ -60,12 +59,12 @@ public class PindanController {
             pindanMap.put("resPinList",resPinList);
             List<HashMap<String,List>> pindans = new LinkedList<>();
             HashMap userGroup = getUserGroup();
-            HashMap UserBuildAssembleList = getUserBuildAssemble(uId);
+//            HashMap UserBuildAssembleList = getUserBuildAssemble(uId);
             pindans.add(pindanMap);
             pindans.add(userGroup);
-            pindans.add(UserBuildAssembleList);
+//            pindans.add(UserBuildAssembleList);
             return new Result(200,"获取列表成功",pindans);
-        }
+//        }
     }
 
     public HashMap getUserGroup(){
