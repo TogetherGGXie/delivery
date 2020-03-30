@@ -72,10 +72,10 @@ public class PindanController {
         }
     }
 
-    @ApiOperation("查询店铺拼单")
+    @ApiOperation("根据pinID查询加入的组")
     @RequestMapping(value = "/assemble/joinAssemble", method= RequestMethod.POST)
     @ResponseBody
-    public Result queryOrders(@RequestParam String pinId ,HttpServletRequest request) {
+    public Result queryJoinAssemble(@RequestParam String pinId ,HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
             return new Result(-1, "用户登录已失效");
