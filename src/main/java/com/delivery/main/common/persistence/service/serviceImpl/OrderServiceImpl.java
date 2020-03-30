@@ -59,7 +59,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         order.setDeliveryFee(new BigDecimal(o.get("deliveryFee").toString()));
         order.setFoodDetails(o.get("totalPrice").toString());
         order.setIsPindan((Integer)(o.get("isPindan")));
-        order.setPinOrderId((Integer)(o.get("pinOrderId")));
+        order.setPinOrderId((o.get("pinOrderId").toString()));
         order.setRemarks(o.get("remarks").toString());
         order.setStatus((Integer)(o.get("status")));
         return order;

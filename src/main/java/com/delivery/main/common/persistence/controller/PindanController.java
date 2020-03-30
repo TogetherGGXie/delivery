@@ -72,6 +72,19 @@ public class PindanController {
         }
     }
 
+    @ApiOperation("查询店铺拼单")
+    @RequestMapping(value = "/assemble/joinAssemble", method= RequestMethod.POST)
+    @ResponseBody
+    public Result queryOrders(@RequestParam String pinId ,HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {
+            return new Result(-1, "用户登录已失效");
+        } else {
+            List<Pindan> list = pindanService.selectList(new EntityWrapper<Pindan>().eq("pinId", pinId));
+            return new Result(200,"成功",list);
+        }
+    }
+
     public HashMap getUserGroup(Integer id,Integer uId){
         List<HashMap<String,Object>> pinList = new LinkedList<>();
         List<Pindan> listByPinId = pindanService.selectList(new EntityWrapper<Pindan>().eq("restaurantId", id).eq("userId", String.valueOf(uId)).eq("other","1"));
