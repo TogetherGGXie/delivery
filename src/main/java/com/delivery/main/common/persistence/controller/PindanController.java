@@ -73,7 +73,7 @@ public class PindanController {
     }
 
     @ApiOperation("根据pinID查询加入的组")
-    @RequestMapping(value = "/assemble/joinAssemble", method= RequestMethod.POST)
+    @RequestMapping(value = "/assemble/pinIdAssemble", method= RequestMethod.POST)
     @ResponseBody
     public Result queryJoinAssemble(@RequestParam String pinId ,HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("user");
