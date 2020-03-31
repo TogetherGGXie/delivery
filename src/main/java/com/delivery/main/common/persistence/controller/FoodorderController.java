@@ -1,8 +1,8 @@
 package com.delivery.main.common.persistence.controller;
 
 
-import com.delivery.main.common.persistence.service.OrderService;
-import com.delivery.main.common.persistence.template.modal.Order;
+import com.delivery.main.common.persistence.service.FoodorderService;
+import com.delivery.main.common.persistence.template.modal.Foodorder;
 import com.delivery.main.common.persistence.template.modal.User;
 import com.delivery.main.util.Result;
 import io.swagger.annotations.ApiOperation;
@@ -23,9 +23,9 @@ import java.util.List;
  * @since 2020-02-24
  */
 @RestController
-public class OrderController {
+public class FoodorderController {
     @Autowired
-    private OrderService orderService;
+    private FoodorderService foodorderService;
     @ApiOperation("查询订单")
     @RequestMapping(value = "v1/order/{orderId}", method= RequestMethod.GET)
     @ResponseBody
@@ -34,11 +34,11 @@ public class OrderController {
         if(user == null){
             return new Result(-1,"用户登录失败");
         }else{
-            Order order = orderService.queryOne(orderId);
-            if(order== null){
+            Foodorder foodorder = foodorderService.queryOne(orderId);
+            if(foodorder== null){
                 return new Result(-1,"查询订单失败");
             }else{
-                HashMap<String,Object> orderInfo = orderService.queryOrder(order);
+                HashMap<String,Object> orderInfo = foodorderService.queryOrder(foodorder);
                 return new Result(200,"获取指定订单成功",orderInfo);
             }
 
@@ -55,32 +55,34 @@ public class OrderController {
                                @RequestParam String pinId,
                                @RequestParam BigDecimal totalPrice,
                                HttpServletRequest request) {
-        User user = (User) request.getSession().getAttribute("user");
-        if(user == null){
-            return new Result(-1,"用户登录失败");
-        }else {
-            Order wxOrder = new Order();
+//        User user = (User) request.getSession().getAttribute("user");
+//        if(user == null){
+//            return new Result(-1,"用户登录失败");
+//        }else {
+//            Integer userId = user.getUserId();
+        Foodorder wxOrder = new Foodorder();
             wxOrder.setRestaurantId(restaurant_id);
-            wxOrder.setFoodDetails(foods);
+        wxOrder.setFoodDetails(foods);
             wxOrder.setAddress(address_id);
-            wxOrder.setTotalPrice(totalPrice);
-            if(pinId == null || " ".equals(pinId)){
-                wxOrder.setIsPindan(0);
-            }else {
-                wxOrder.setPinOrderId(pinId);
-                wxOrder.setIsPindan(1);
-            }
+        wxOrder.setTotalPrice(totalPrice);
+//            wxOrder.setUserId(userId);
+        if(pinId == null || " ".equals(pinId)){
+            wxOrder.setIsPindan(0);
+        }else {
+            wxOrder.setPinOrderId(pinId);
+            wxOrder.setIsPindan(1);
+        }
 
-            boolean orderResult = orderService.insert(wxOrder);
-            if(orderResult){
-                Integer orderId = wxOrder.getOrderId();
-                HashMap<String,Object> hashMap = new HashMap<>();
-                hashMap.put("order_id",orderId);
-                hashMap.put("total_price",totalPrice);
-                return new Result(200,"提交订单成功",hashMap);
-            }else {
-                return  new Result(-1,"提交订单失败");
-            }
+        boolean orderResult = foodorderService.insert(wxOrder);
+        if(orderResult){
+            Integer orderId = wxOrder.getOrderId();
+            HashMap<String,Object> hashMap = new HashMap<>();
+            hashMap.put("order_id",orderId);
+            hashMap.put("total_price",totalPrice);
+            return new Result(200,"提交订单成功",hashMap);
+        }else {
+            return  new Result(-1,"提交订单失败");
+        }
 
 //            if (orderResult) {
 //                String foodDetails = orderDetail.getFoodDetails();
@@ -117,7 +119,7 @@ public class OrderController {
 //            result.setData(orders);
 //            return new Result(200, "添加成功",orders);
 
-        }
+//        }
     }
 
     @ApiOperation("获取用户所有的订单")
@@ -131,7 +133,7 @@ public class OrderController {
             Integer userId = user.getUserId();
             HashMap<String,Object> hashMap = new HashMap<>();
             hashMap.put("user_id",userId);
-            List<Order> orders = orderService.selectByMap(hashMap);
+            List<Foodorder> orders = foodorderService.selectByMap(hashMap);
             return new Result(-1,"获取我的订单列表成功",orders);
         }
     }

@@ -1,32 +1,25 @@
 package com.delivery.main.common.persistence.controller;
 
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.delivery.main.common.persistence.service.*;
 import com.delivery.main.common.persistence.template.modal.*;
+import com.delivery.main.util.Result;
 import com.qiniu.util.Auth;
-import io.swagger.annotations.*;
-import io.swagger.models.auth.In;
-import org.aspectj.weaver.ast.Or;
-import org.omg.CORBA.OBJECT_NOT_EXIST;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.stereotype.Controller;
-
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
-import com.delivery.main.util.Result;
-import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * <p>
@@ -54,7 +47,7 @@ public class AdminController {
     private FoodService foodService;
 
     @Autowired
-    private OrderService orderService;
+    private FoodorderService orderService;
 
     @Autowired
     private RestaurantService restaurantService;
@@ -890,7 +883,7 @@ public class AdminController {
     @ApiOperation("店铺管理员修改订单状态")
     @RequestMapping(value = "/updateOrder", method = RequestMethod.POST)
     @ApiImplicitParam(name = "order", value = "{orderId:1, status:1}")
-    public Result updateOrder(@RequestBody Order order,
+    public Result updateOrder(@RequestBody Foodorder order,
                           HttpServletRequest request) {
         Result res = new Result();
         Admin admin = (Admin)request.getSession().getAttribute("admin");
@@ -905,7 +898,7 @@ public class AdminController {
         } else if (order.getOrderId() == null) {
             return new Result(-1, "您未选择订单");
         } else {
-            Order o = orderService.queryOne(order.getOrderId());
+            Foodorder o = orderService.queryOne(order.getOrderId());
             if (o == null) {
                 res.setStatus(-1);
                 res.setMessage("订单不存在，修改失败");

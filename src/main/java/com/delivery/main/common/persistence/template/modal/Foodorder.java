@@ -15,10 +15,10 @@ import java.util.Date;
  * </p>
  *
  * @author null123
- * @since 2020-02-24
+ * @since 2020-03-30
  */
-@TableName("order")
-public class Order implements Serializable {
+@TableName("foodorder")
+public class Foodorder implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -187,7 +187,7 @@ public class Order implements Serializable {
 
     @Override
     public String toString() {
-        return "Order{" +
+        return "Foodorder{" +
         ", orderId=" + orderId +
         ", userId=" + userId +
         ", restaurantId=" + restaurantId +

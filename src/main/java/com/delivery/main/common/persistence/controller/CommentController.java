@@ -4,21 +4,18 @@ package com.delivery.main.common.persistence.controller;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.delivery.main.common.persistence.service.CommentService;
-import com.delivery.main.common.persistence.service.OrderService;
+import com.delivery.main.common.persistence.service.FoodorderService;
 import com.delivery.main.common.persistence.service.RestaurantService;
 import com.delivery.main.common.persistence.template.modal.Comment;
-import com.delivery.main.common.persistence.template.modal.Order;
+import com.delivery.main.common.persistence.template.modal.Foodorder;
 import com.delivery.main.common.persistence.template.modal.Restaurant;
 import com.delivery.main.common.persistence.template.modal.User;
 import com.delivery.main.util.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,7 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * <p>
@@ -48,7 +44,7 @@ public class CommentController {
     private RestaurantService restaurantService;
 
     @Autowired
-    private OrderService orderService;
+    private FoodorderService orderService;
 
 
     @ApiOperation("获取店铺评论")
@@ -96,9 +92,9 @@ public class CommentController {
             return res;
         } else {
             Comment c = commentService.selectOne(new EntityWrapper<Comment>().eq("order_id", orderId));
-            Order ord = orderService.queryOne(orderId);
+            Foodorder ord = orderService.queryOne(orderId);
             System.out.println(ord.toString());
-            Order o = orderService.queryOne(orderId);
+            Foodorder o = orderService.queryOne(orderId);
             System.out.println(o.toString());
             if (o == null) {
                 res.setStatus(-1);
