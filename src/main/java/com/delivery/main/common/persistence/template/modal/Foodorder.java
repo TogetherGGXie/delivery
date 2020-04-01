@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.enums.IdType;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * <p>
@@ -76,7 +75,7 @@ public class Foodorder implements Serializable {
      * 订单创建时间
      */
     @TableField("create_time")
-    private Date createTime;
+    private String createTime;
     /**
      * 是否是拼单
      */
@@ -87,7 +86,35 @@ public class Foodorder implements Serializable {
      */
     @TableField("pin_order_id")
     private String pinOrderId;
+    @TableField("pin_length")
+    private String pinLength;
 
+    @Override
+    public String toString() {
+        return "Foodorder{" +
+                "orderId=" + orderId +
+                ", userId=" + userId +
+                ", restaurantId=" + restaurantId +
+                ", totalPrice=" + totalPrice +
+                ", foodDetails='" + foodDetails + '\'' +
+                ", deliveryFee=" + deliveryFee +
+                ", address='" + address + '\'' +
+                ", remarks='" + remarks + '\'' +
+                ", status=" + status +
+                ", createTime=" + createTime +
+                ", isPindan=" + isPindan +
+                ", pinOrderId='" + pinOrderId + '\'' +
+                ", pinLength='" + pinLength + '\'' +
+                '}';
+    }
+
+    public String getPinLength() {
+        return pinLength;
+    }
+
+    public void setPinLength(String pinLength) {
+        this.pinLength = pinLength;
+    }
 
     public Integer getOrderId() {
         return orderId;
@@ -161,11 +188,11 @@ public class Foodorder implements Serializable {
         this.status = status;
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
@@ -185,21 +212,4 @@ public class Foodorder implements Serializable {
         this.pinOrderId = pinOrderId;
     }
 
-    @Override
-    public String toString() {
-        return "Foodorder{" +
-        ", orderId=" + orderId +
-        ", userId=" + userId +
-        ", restaurantId=" + restaurantId +
-        ", totalPrice=" + totalPrice +
-        ", foodDetails=" + foodDetails +
-        ", deliveryFee=" + deliveryFee +
-        ", address=" + address +
-        ", remarks=" + remarks +
-        ", status=" + status +
-        ", createTime=" + createTime +
-        ", isPindan=" + isPindan +
-        ", pinOrderId=" + pinOrderId +
-        "}";
-    }
 }

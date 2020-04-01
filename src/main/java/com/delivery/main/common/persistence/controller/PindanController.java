@@ -215,17 +215,18 @@ public class PindanController {
             pd.setUsername(userName);
             pd.setPinId(pinId);
             pd.setTime(time);
+            pd.setStatus("0");
             pd.setOther("1");
             pd.setUserId(userId);
             pindanService.insert(pd);
             Integer id = pd.getId();
-            List<Pindan> pindanList = pindanService.selectList(new EntityWrapper<Pindan>().eq("pinId", pinId));
-            if (pindanList.size() == 6) {
-                for (Pindan i : pindanList) {
-                    i.setGroupStatus("1");
-                }
-                pindanService.updateBatchById(pindanList);
-            }
+//            List<Pindan> pindanList = pindanService.selectList(new EntityWrapper<Pindan>().eq("pinId", pinId));
+//            if (pindanList.size() == 6) {
+//                for (Pindan i : pindanList) {
+//                    i.setGroupStatus("1");
+//                }
+//                pindanService.updateBatchById(pindanList);
+//            }
 
             return new Result(200, "加入一个拼单组成功", id);
         }

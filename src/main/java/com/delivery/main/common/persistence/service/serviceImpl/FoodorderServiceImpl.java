@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -55,7 +54,7 @@ public class FoodorderServiceImpl extends ServiceImpl<FoodorderMapper, Foodorder
             order.setRestaurantId((Integer)(o.get("restaurantId")));
             order.setAddress(o.get("address").toString());
             order.setTotalPrice(new BigDecimal(o.get("totalPrice").toString()));
-            order.setCreateTime((Date)o.get("createTime"));
+//            order.setCreateTime(o.get("createTime"));
             order.setDeliveryFee(new BigDecimal(o.get("deliveryFee").toString()));
             order.setFoodDetails(o.get("totalPrice").toString());
             order.setIsPindan((Integer)(o.get("isPindan")));
