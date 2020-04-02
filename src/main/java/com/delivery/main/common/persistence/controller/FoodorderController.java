@@ -96,6 +96,7 @@ public class FoodorderController {
                                @RequestParam String pinId,
                                @RequestParam String pinLength,
                                @RequestParam BigDecimal totalPrice,
+                               @RequestParam BigDecimal deliveryFee,
                                HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("user");
         if(user == null){
@@ -111,6 +112,7 @@ public class FoodorderController {
         wxOrder.setTotalPrice(totalPrice);
         wxOrder.setPinLength(pinLength);
         wxOrder.setCreateTime(time);
+        wxOrder.setDeliveryFee(deliveryFee);
         wxOrder.setStatus(2);
             wxOrder.setUserId(userId);
         if (pinId == null || " ".equals(pinId)) {
