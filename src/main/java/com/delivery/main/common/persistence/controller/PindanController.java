@@ -87,7 +87,7 @@ public class PindanController {
 
     public HashMap getUserGroup(Integer id,Integer uId){
         List<HashMap<String,Object>> pinList = new LinkedList<>();
-        List<Pindan> listByPinId = pindanService.selectList(new EntityWrapper<Pindan>().eq("restaurantId", id).eq("userId", String.valueOf(uId)).eq("other","1"));
+        List<Pindan> listByPinId = pindanService.selectList(new EntityWrapper<Pindan>().eq("restaurantId", id).eq("userId", String.valueOf(uId)).eq("status",0).eq("other","1"));
         for(Pindan i : listByPinId){
             String pinId = i.getPinId();
             String time = i.getTime();
@@ -105,7 +105,7 @@ public class PindanController {
 
     public HashMap getUserBuildAssemble(Integer id,Integer uId){
         List<HashMap<String,Object>> pinList = new LinkedList<>();
-        List<Pindan> listByPinId = pindanService.selectList(new EntityWrapper<Pindan>().eq("restaurantId", id).eq("userId", String.valueOf(uId)).eq("other","0"));
+        List<Pindan> listByPinId = pindanService.selectList(new EntityWrapper<Pindan>().eq("restaurantId", id).eq("userId", String.valueOf(uId)).eq("status",0).eq("other","0"));
         for(Pindan i : listByPinId){
             String pinId = i.getPinId();
             String time = i.getTime();
