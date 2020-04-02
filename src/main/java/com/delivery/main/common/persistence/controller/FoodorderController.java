@@ -218,7 +218,7 @@ public class FoodorderController {
                 list.add(orderDetail);
 
             }
-            return new Result(-1, "获取我的订单列表成功", orders);
+            return new Result(200, "获取我的订单列表成功", list);
         }
     }
 
