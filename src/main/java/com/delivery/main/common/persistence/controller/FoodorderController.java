@@ -9,7 +9,9 @@ import com.delivery.main.common.persistence.service.RestaurantService;
 import com.delivery.main.common.persistence.template.modal.*;
 import com.delivery.main.util.Result;
 import io.swagger.annotations.ApiOperation;
+import net.sf.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -214,7 +216,19 @@ public class FoodorderController {
                     orderDetail.put("has_comment",false);
                 }
                 orderDetail.put("restairant",hashMap1);
-                orderDetail.put("food",i.getFoodDetails());
+//                JSONArray jsonArray = null;
+                try {
+                    try {
+                        JSONArray  jsonArray = new JSONArray(i.getFoodDetails());
+                        orderDetail.put("food",jsonArray);
+                    } catch (org.springframework.boot.configurationprocessor.json.JSONException e) {
+                        e.printStackTrace();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
                 list.add(orderDetail);
 
             }
