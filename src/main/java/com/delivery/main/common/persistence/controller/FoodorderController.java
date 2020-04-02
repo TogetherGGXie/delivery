@@ -80,6 +80,7 @@ public class FoodorderController {
                 String addressId = foodorder.getAddress();
                 Address address = addressService.selectOne(new EntityWrapper<Address>().eq("address_id", addressId));
                 orderInfo.put("address",address);
+                orderInfo.put("isPindan",foodorder.getIsPindan());
                 return new Result(200, "获取指定订单成功", orderInfo);
             }
 
