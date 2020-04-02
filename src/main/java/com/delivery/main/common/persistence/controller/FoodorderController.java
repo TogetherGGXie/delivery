@@ -81,6 +81,8 @@ public class FoodorderController {
                 Address address = addressService.selectOne(new EntityWrapper<Address>().eq("address_id", addressId));
                 orderInfo.put("address",address);
                 orderInfo.put("isPindan",foodorder.getIsPindan());
+
+                orderInfo.put("deliveryFee", foodorder.getDeliveryFee());
                 return new Result(200, "获取指定订单成功", orderInfo);
             }
 
