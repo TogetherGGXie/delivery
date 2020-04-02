@@ -2,16 +2,11 @@ package com.delivery.main.common.persistence.controller;
 
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.delivery.main.common.persistence.service.CommentService;
-import com.delivery.main.common.persistence.service.FoodorderService;
-import com.delivery.main.common.persistence.service.PindanService;
-import com.delivery.main.common.persistence.service.RestaurantService;
+import com.delivery.main.common.persistence.service.*;
 import com.delivery.main.common.persistence.template.modal.*;
 import com.delivery.main.util.Result;
 import io.swagger.annotations.ApiOperation;
-import net.sf.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +35,8 @@ public class FoodorderController {
     private CommentService commentService;
     @Autowired
     private PindanService pindanService;
+    @Autowired
+    private AddressService addressService;
 
     @ApiOperation("查询订单")
     @RequestMapping(value = "v1/order/{orderId}", method = RequestMethod.GET)
@@ -80,7 +77,9 @@ public class FoodorderController {
                 orderInfo.put("pinGroup",hashMap);
                 orderInfo.put("restaurantInfo",hashMap1);
                 orderInfo.put("foodsList",foodorder.getFoodDetails());
-                orderInfo.put("address",foodorder.getAddress());
+                String addressId = foodorder.getAddress();
+                Address address = addressService.selectOne(new EntityWrapper<Address>().eq("address_id", addressId));
+                orderInfo.put("address",address);
                 return new Result(200, "获取指定订单成功", orderInfo);
             }
 
@@ -216,18 +215,7 @@ public class FoodorderController {
                     orderDetail.put("has_comment",false);
                 }
                 orderDetail.put("restairant",hashMap1);
-//                JSONArray jsonArray = null;
-                try {
-                    try {
-                        JSONArray  jsonArray = new JSONArray(i.getFoodDetails());
-                        orderDetail.put("food",jsonArray);
-                    } catch (org.springframework.boot.configurationprocessor.json.JSONException e) {
-                        e.printStackTrace();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
+                orderDetail.put("food",i.getFoodDetails());
 
                 list.add(orderDetail);
 
