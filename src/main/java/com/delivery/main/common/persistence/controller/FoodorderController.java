@@ -138,6 +138,7 @@ public class FoodorderController {
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("order_id", orderId);
             hashMap.put("total_price", totalPrice);
+            hashMap.put("deliveryFee", deliveryFee);
             return new Result(200, "提交订单成功", hashMap);
         } else {
             return new Result(-1, "提交订单失败");
