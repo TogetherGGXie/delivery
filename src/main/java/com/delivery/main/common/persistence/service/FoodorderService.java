@@ -18,4 +18,5 @@ public interface FoodorderService extends IService<Foodorder> {
     HashMap<String,Object> queryOrder(Foodorder foodorder);
     Foodorder queryOne(Integer orderId);
     Page<HashMap<String, Object>> getMyOrders(Page<HashMap<String, Object>> page, Integer restaurantId);
+    Page<HashMap<String, Object>> getAllOrders(Page<HashMap<String, Object>> page, Integer restaurantId);
 }

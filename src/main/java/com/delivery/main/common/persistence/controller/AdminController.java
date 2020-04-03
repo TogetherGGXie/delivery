@@ -880,6 +880,38 @@ public class AdminController {
         }
     }
 
+
+    @ApiOperation("店铺管理员获取本店订单列表")
+    @RequestMapping(value = "/getAllOrders", method = RequestMethod.GET)
+    @ApiImplicitParam(name = "page", value = "{page:1, pageSize:1, restaurantId:非必须，超管可选}")
+    public Result getAllOrders(@RequestBody HashMap<String, Object> pager,
+                              HttpServletRequest request) {
+        Result res = new Result();
+        Admin admin = (Admin)request.getSession().getAttribute("admin");
+        if (admin == null) {
+            res.setStatus(-1);
+            res.setMessage("登录状态失效");
+            return res;
+        } else if (admin.getAdminType() == 1) {
+            return new Result(-1, "您的权限不足！");
+        } else {
+            Integer page = (Integer) pager.get("page");
+            Integer pageSize = (Integer) pager.get("pageSize");
+            Integer restaurantId = admin.getAdminType() == 1 ? admin.getRestaurantId() : (Integer)pager.get("restaurantId");
+            if(page == null) {
+                page = 1;
+            }
+            if (pageSize == null) {
+                pageSize = 5;
+            }
+            Page<HashMap<String, Object>> p = orderService.getAllOrders(new Page<>(page,pageSize), restaurantId);
+            res.setStatus(200);
+            res.setMessage("获取订单列表成功");
+            res.setData(p);
+            return res;
+        }
+    }
+
     @ApiOperation("店铺管理员修改订单状态")
     @RequestMapping(value = "/updateOrder", method = RequestMethod.POST)
     @ApiImplicitParam(name = "order", value = "{orderId:1, status:1}")

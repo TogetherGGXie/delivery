@@ -71,5 +71,13 @@ public class FoodorderServiceImpl extends ServiceImpl<FoodorderMapper, Foodorder
             return pager.setRecords(foodorderMapper.getMyOrders(page, Rid));
         }
 
+        @Override
+        public Page<HashMap<String, Object>> getAllOrders(Page<HashMap<String, Object>> page, Integer restaurantId) {
+            Page<HashMap<String, Object>> pager = new Page<>(page.getCurrent(),page.getSize());
+            String Rid = restaurantId == null ? "[0-9]*" : restaurantId.toString();
+            System.out.println(Rid);
+            return pager.setRecords(foodorderMapper.getAllOrders(page, Rid));
+        }
+
 
 }

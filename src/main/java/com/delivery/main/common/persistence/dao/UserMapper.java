@@ -30,6 +30,7 @@ public interface UserMapper extends BaseMapper<User> {
             "\topen_id,\n" +
             "\tgender,\n" +
             "\tavatar,\n" +
+            "\tcity,\n" +
             "\tcreate__time,\n" +
             "\tstatus\n" +
             "FROM\n" +
@@ -44,6 +45,7 @@ public interface UserMapper extends BaseMapper<User> {
             @Result(property = "openId", column = "open_id"),
             @Result(property = "gender", column = "gender"),
             @Result(property = "avatar", column = "avatar"),
+            @Result(property = "city", column = "city"),
             @Result(property = "create__time", column = "create__time"),
             @Result(property = "status", column = "status"),
     })
