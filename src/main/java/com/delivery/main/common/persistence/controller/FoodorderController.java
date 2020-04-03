@@ -126,7 +126,7 @@ public class FoodorderController {
         }
         Pindan pindan = new Pindan();
         pindan.setStatus("1");
-        pindanService.update(pindan,new EntityWrapper<Pindan>().eq("pinId",pinId));
+        pindanService.update(pindan,new EntityWrapper<Pindan>().eq("pinId",pinId).eq("userId",userId));
         List<Pindan> pindanList = pindanService.selectList(new EntityWrapper<Pindan>().eq("pinId", pinId));
         if (pindanList.size() == 6) {
             for (Pindan i : pindanList) {
