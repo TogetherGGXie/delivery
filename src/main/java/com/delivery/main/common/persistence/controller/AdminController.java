@@ -90,7 +90,7 @@ public class AdminController {
     }
 
     @ApiOperation("管理员注销登录")
-    @RequestMapping(value = "/signout", method = RequestMethod.GET)
+    @RequestMapping(value = "/signout")
     public Result adminLogin(HttpServletRequest request) {
         Result res = new Result();
         res.setStatus(200);
@@ -100,7 +100,7 @@ public class AdminController {
     }
 
     @ApiOperation("管理员获取个人信息")
-    @RequestMapping(value = "/adminInfo", method = RequestMethod.GET)
+    @RequestMapping(value = "/adminInfo")
     public Result adminInfo(HttpServletRequest request) {
         Result res = new Result();
         Admin admin = (Admin)request.getSession().getAttribute("admin");
@@ -112,7 +112,7 @@ public class AdminController {
 
     @ApiOperation("管理员更新个人信息")
     @ApiImplicitParam(name = "adminForm", value = "{adminName:admin, password:admin, city: xxx, avatar:xxx}")
-    @RequestMapping(value = "/updateInfo", method = RequestMethod.GET)
+    @RequestMapping(value = "/updateInfo")
     public Result updateInfo(@RequestBody HashMap<String, Object> adminForm, HttpServletRequest request) {
         Result res = new Result();
         Admin admin = (Admin)request.getSession().getAttribute("admin");
@@ -132,7 +132,7 @@ public class AdminController {
 
     @ApiOperation("查询用户名是否可用")
     @ApiImplicitParam(name = "registerForm", value = "{adminName:admin}")
-    @RequestMapping(value = "/checkAdminName", method = RequestMethod.GET)
+    @RequestMapping(value = "/checkAdminName")
     public Result checkAdminName(@RequestBody HashMap<String, String> registerForm) {
         Result res = new Result();
         String adminName = registerForm.get("adminName");
@@ -185,7 +185,7 @@ public class AdminController {
     }
 
     @ApiOperation("管理员获取分类列表")
-    @RequestMapping(value = "/getCategories/{restaurantId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/getCategories/{restaurantId}")
     @ApiImplicitParam(name = "page", value = "{page:1,pageSize:5}")
     public Result getCategories(@PathVariable Integer restaurantId,
                               @RequestBody HashMap<String, Object> pager,
@@ -491,7 +491,7 @@ public class AdminController {
     }
 
     @ApiOperation("店铺管理员获取店铺所有评论")
-    @RequestMapping(value = "/getComments", method = RequestMethod.GET)
+    @RequestMapping(value = "/getComments")
     @ApiImplicitParam(name = "commentForm", value = "{restaurantId:1, page:1, pageSize:1 }")
     public Result getComments(@RequestBody HashMap<String, String> commentForm,
                               HttpServletRequest request) {
@@ -621,7 +621,7 @@ public class AdminController {
     }
 
     @ApiOperation("管理员获取所有用户列表")
-    @RequestMapping(value = "/getUsers", method = RequestMethod.GET)
+    @RequestMapping(value = "/getUsers")
     @ApiImplicitParam(name = "page", value = "{page:1, pageSize:5 }")
     public Result getUserList(@RequestBody HashMap<String, String> userForm,
                               HttpServletRequest request) {
@@ -711,7 +711,7 @@ public class AdminController {
     }
 
     @ApiOperation("管理员获取店铺列表")
-    @RequestMapping(value = "/getRestaurants", method = RequestMethod.GET)
+    @RequestMapping(value = "/getRestaurants")
     @ApiImplicitParam(name = "page", value = "{page:1, pageSize:1 }")
     public Result getRestaurants(@RequestBody HashMap<String, Object> pager,
                               HttpServletRequest request) {
@@ -850,7 +850,7 @@ public class AdminController {
     }
 
     @ApiOperation("店铺管理员获取本店订单列表")
-    @RequestMapping(value = "/getOrders", method = RequestMethod.GET)
+    @RequestMapping(value = "/getOrders")
     @ApiImplicitParam(name = "page", value = "{page:1, pageSize:1, restaurantId:非必须，超管可选}")
     public Result getMyOrders(@RequestBody HashMap<String, Object> pager,
                                  HttpServletRequest request) {
@@ -882,7 +882,7 @@ public class AdminController {
 
 
     @ApiOperation("店铺管理员获取本店订单列表")
-    @RequestMapping(value = "/getAllOrders", method = RequestMethod.GET)
+    @RequestMapping(value = "/getAllOrders")
     @ApiImplicitParam(name = "page", value = "{page:1, pageSize:1, restaurantId:非必须，超管可选}")
     public Result getAllOrders(@RequestBody HashMap<String, Object> pager,
                               HttpServletRequest request) {
@@ -947,7 +947,97 @@ public class AdminController {
     }
 
 
-    @RequestMapping(value = "/getToken", method = RequestMethod.GET)
+    @ApiOperation("管理员获取所有用户列表")
+    @RequestMapping(value = "/getAdmins")
+    @ApiImplicitParam(name = "page", value = "{page:1, pageSize:5 }")
+    public Result getAdminList(@RequestBody HashMap<String, String> adminForm,
+                              HttpServletRequest request) {
+        Result res = new Result();
+        Admin admin = (Admin)request.getSession().getAttribute("admin");
+        Integer page = Integer.valueOf(adminForm.get("page"));
+        Integer pageSize = Integer.valueOf(adminForm.get("pageSize"));;
+        if (admin == null) {
+            res.setStatus(-1);
+            res.setMessage("登录状态失效");
+            return res;
+        }
+        if (admin.getAdminType() == 1 ) {
+            res.setStatus(-1);
+            res.setMessage("您的权限不足");
+            return res;
+        } else {
+            if(page == null) {
+                page = 1;
+            }
+            if (pageSize == null) {
+                pageSize = 5;
+            }
+            Page<HashMap<String, Object>> pager = adminService.getAdminList(new Page<>(page,pageSize));
+            res.setStatus(200);
+            res.setMessage("获取管理员成功");
+            res.setData(pager);
+            return res;
+        }
+    }
+
+    @ApiOperation("店铺管理员修改用户")
+    @RequestMapping(value = "/updateAdmin", method = RequestMethod.POST)
+    @ApiImplicitParam(name = "Admin")
+    public Result updateAdmin(@RequestBody Admin newAdmin,
+                             HttpServletRequest request) {
+        Result res = new Result();
+        Admin admin = (Admin)request.getSession().getAttribute("admin");
+        if (admin == null) {
+            res.setStatus(-1);
+            res.setMessage("登录状态失效");
+            return res;
+        } else if (admin.getAdminType() == 1) {
+            res.setStatus(-1);
+            res.setMessage("权限不足，修改管理员失败");
+            return res;
+        } else {
+            if (adminService.updateById(newAdmin)) {
+                res.setStatus(200);
+                res.setMessage("修改管理员成功");
+                return res;
+            } else {
+                res.setStatus(-1);
+                res.setMessage("修改管理员失败");
+                return res;
+            }
+        }
+    }
+
+    @ApiOperation("店铺管理员删除管理员")
+    @RequestMapping(value = "/deleteAdmin", method = RequestMethod.POST)
+    @ApiImplicitParam(name = "admin", value = "{adminId:1,status:-1}")
+    public Result deleteUser(@RequestBody Admin deleteAdmin,
+                             HttpServletRequest request) {
+        Result res = new Result();
+        Admin admin = (Admin)request.getSession().getAttribute("admin");
+        if (admin == null) {
+            res.setStatus(-1);
+            res.setMessage("登录状态失效");
+            return res;
+        } else if (admin.getAdminType() == 1) {
+            res.setStatus(-1);
+            res.setMessage("权限不足，修改用户失败");
+            return res;
+        } else {
+            deleteAdmin.setStatus(-1);
+            if (adminService.updateById(deleteAdmin)) {
+                res.setStatus(200);
+                res.setMessage("删除管理员成功");
+                return res;
+            } else {
+                res.setStatus(-1);
+                res.setMessage("删除管理员失败");
+                return res;
+            }
+        }
+    }
+
+    @RequestMapping(value = "/getToken")
     @ApiOperation("获取上传token")
     public Result getToken(HttpServletRequest request) {
         Admin admin = (Admin)request.getSession().getAttribute("admin");

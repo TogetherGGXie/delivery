@@ -1,5 +1,6 @@
 package com.delivery.main.common.persistence.template.modal;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.enums.IdType;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -147,6 +148,7 @@ public class Restaurant implements Serializable {
     /**
      * 最近修改时间
      */
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @TableField("last_upd_time")
     private Date lastUpdTime;
     /**

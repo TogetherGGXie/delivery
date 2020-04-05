@@ -1,5 +1,6 @@
 package com.delivery.main.common.persistence.template.modal;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.enums.IdType;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -78,6 +79,7 @@ public class Food implements Serializable {
     /**
      * 创建时间
      */
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @TableField("create_time")
     private Date createTime;
     /**

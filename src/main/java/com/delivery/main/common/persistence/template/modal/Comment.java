@@ -1,5 +1,6 @@
 package com.delivery.main.common.persistence.template.modal;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
@@ -48,6 +49,7 @@ public class Comment implements Serializable {
     /**
      * 评论时间
      */
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @TableField("comment_time")
     private Date commentTime;
     /**
@@ -86,6 +88,7 @@ public class Comment implements Serializable {
     /**
      * 商家回复时间
      */
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @TableField("reply_time")
     private Date replyTime;
     /**

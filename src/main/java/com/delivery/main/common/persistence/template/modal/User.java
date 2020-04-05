@@ -1,5 +1,6 @@
 package com.delivery.main.common.persistence.template.modal;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
@@ -60,6 +61,7 @@ public class User extends Model<User> {
     /**
      * 创建时间
      */
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @TableField("create__time")
     private Date createTime;
     /**
