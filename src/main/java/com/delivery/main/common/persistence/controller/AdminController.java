@@ -83,7 +83,12 @@ public class AdminController {
         }else {
             res.setStatus(200);
             res.setMessage("登陆成功");
-            res.setData(new HashMap<String, Object>().put("adminType", admin.getAdminType()));
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("restaurantId", admin.getRestaurantId());
+            data.put("adminType", admin.getAdminType());
+            data.put("adminName", admin.getAdminName());
+            data.put("adminId", admin.getAdminId());
+            res.setData(data);
             request.getSession().setAttribute("admin", admin);
         }
         return res;
@@ -947,7 +952,7 @@ public class AdminController {
     }
 
 
-    @ApiOperation("管理员获取所有用户列表")
+    @ApiOperation("管理员获取店铺管理员列表")
     @RequestMapping(value = "/getAdmins")
     @ApiImplicitParam(name = "page", value = "{page:1, pageSize:5 }")
     public Result getAdminList(@RequestBody HashMap<String, String> adminForm,
@@ -980,7 +985,7 @@ public class AdminController {
         }
     }
 
-    @ApiOperation("店铺管理员修改用户")
+    @ApiOperation("店铺管理员修改店铺管理员")
     @RequestMapping(value = "/updateAdmin", method = RequestMethod.POST)
     @ApiImplicitParam(name = "Admin")
     public Result updateAdmin(@RequestBody Admin newAdmin,
@@ -1008,7 +1013,7 @@ public class AdminController {
         }
     }
 
-    @ApiOperation("店铺管理员删除管理员")
+    @ApiOperation("店铺管理员删除店铺管理员")
     @RequestMapping(value = "/deleteAdmin", method = RequestMethod.POST)
     @ApiImplicitParam(name = "admin", value = "{adminId:1,status:-1}")
     public Result deleteUser(@RequestBody Admin deleteAdmin,
