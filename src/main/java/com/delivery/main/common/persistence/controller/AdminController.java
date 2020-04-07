@@ -502,9 +502,9 @@ public class AdminController {
                               HttpServletRequest request) {
         Result res = new Result();
         Admin admin = (Admin)request.getSession().getAttribute("admin");
-        Integer restaurantId = Integer.valueOf(commentForm.get("restaurantId"));;
-        Integer page = Integer.valueOf(commentForm.get("page"));
-        Integer pageSize = Integer.valueOf(commentForm.get("pageSize"));;
+        Integer restaurantId = commentForm.get("restaurantId") == null ? null :Integer.valueOf(commentForm.get("restaurantId"));;
+        Integer page = commentForm.get("page") == null ? null :Integer.valueOf(commentForm.get("page"));
+        Integer pageSize = commentForm.get("pageSize") == null ? null :Integer.valueOf(commentForm.get("pageSize"));;
         if (admin == null) {
             res.setStatus(-1);
             res.setMessage("登录状态失效");

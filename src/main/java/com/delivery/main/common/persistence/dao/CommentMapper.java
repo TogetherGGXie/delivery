@@ -20,6 +20,7 @@ import java.util.List;
 public interface CommentMapper extends BaseMapper<Comment> {
 
     @Select("SELECT\n" +
+            "\tcomment_id,\n" +
             "\tuser_name,\n" +
             "\tavatar,\n" +
             "\tcomment_time,\n" +
@@ -38,6 +39,7 @@ public interface CommentMapper extends BaseMapper<Comment> {
             "ORDER BY\n" +
             "\tcomment_time")
     @Results(id="commentLists",value={
+            @Result(property = "commentId", column = "comment_id"),
             @Result(property = "username", column = "user_name"),
             @Result(property = "avatar", column = "avatar"),
             @Result(property = "commentTime", column = "comment_time"),

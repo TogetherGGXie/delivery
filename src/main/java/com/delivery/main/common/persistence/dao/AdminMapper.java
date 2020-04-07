@@ -30,16 +30,15 @@ public interface AdminMapper extends BaseMapper<Admin> {
             "\tadmin.create_time,\n" +
             "\tadmin.admin_type,\n" +
             "\tadmin.city,\n" +
-            "\tadmin.create_time,\n" +
             "\tadmin.restaurant_id,\n" +
             "\trestaurant.name,\n" +
             "\tadmin.avatar\n" +
             "FROM\n" +
-            "\t`user` left join `restaurant`\n" +
-            "\t on user.restaurant_id = restaurant.restaurant_id\n" +
+            "\t`admin` left join `restaurant`\n" +
+            "\t on admin.restaurant_id = restaurant.restaurant_id\n" +
             "\t where admin.status = 1 and admin.admin_type = 1\n" +
             "\tORDER BY\n" +
-            "\tadmin.create__time")
+            "\tadmin.create_time")
     @Results(id="AdminListResultMap",value={
             @Result(property = "adminId", column = "admin_id"),
             @Result(property = "adminName", column = "admin_name"),
