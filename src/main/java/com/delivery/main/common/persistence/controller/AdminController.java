@@ -403,7 +403,7 @@ public class AdminController {
             res.setStatus(-1);
             res.setMessage("请选择商店");
             return res;
-        } else if (admin.getAdminType() == 1 && (food.getRestaurantId().equals(admin.getRestaurantId()))) {
+        } else if (admin.getAdminType() == 1 && (!food.getRestaurantId().equals(admin.getRestaurantId()))) {
             res.setStatus(-1);
             res.setMessage("您无权添加商品");
             return res;
