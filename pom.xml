@@ -47,6 +47,10 @@
             <optional>true</optional>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+        </dependency>
         <!--spring thymeleaf -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -174,6 +178,7 @@
             <artifactId>bcprov-jdk16</artifactId>
             <version>1.46</version>
         </dependency>
+
     </dependencies>
 
     <build>

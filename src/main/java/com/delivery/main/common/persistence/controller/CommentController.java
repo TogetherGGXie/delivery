@@ -92,9 +92,9 @@ public class CommentController {
             return res;
         } else {
             Comment c = commentService.selectOne(new EntityWrapper<Comment>().eq("order_id", orderId));
-            Foodorder ord = orderService.queryOne(orderId);
+            Foodorder ord = orderService.selectById(orderId);
             System.out.println(ord.toString());
-            Foodorder o = orderService.queryOne(orderId);
+            Foodorder o = orderService.selectById(orderId);
             System.out.println(o.toString());
             if (o == null) {
                 res.setStatus(-1);
